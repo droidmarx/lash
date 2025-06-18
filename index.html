@@ -6,149 +6,384 @@
     <title>Gerenciamento de Cílios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-light: #F472B6;
+            --secondary-light: #FBBF24;
+            --bg-light: #FFFFFF;
+            --text-light: #1F2937;
+            --whatsapp: #4CAF50;
+            --whatsapp-hover: #2E7D32;
+            --primary-dark: #6D28D9;
+            --secondary-dark: #D97706;
+            --bg-dark: #111827;
+            --text-dark: #F9FAFB;
+        }
         body {
-            background: linear-gradient(45deg, #1e3a8a, #4a1e8a, #8a1e4a, #1e3a8a);
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light), var(--bg-light), var(--primary-light));
             background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
-            font-family: 'Arial', sans-serif;
-            transition: all 0.3s ease;
+            animation: gradientAnimation 12s ease infinite;
+            font-family: 'Poppins', sans-serif;
             min-height: 100vh;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        body.dark-theme {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark), var(--bg-dark), var(--primary-dark));
+            color: var(--text-dark);
         }
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        body.dark-theme {
-            color: #f8f9fa;
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
         }
-        .container {
-            background-color: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        .dark-theme .navbar {
+            background: rgba(17, 24, 39, 0.9);
         }
-        .container:hover {
-            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-            transform: translateY(-5px);
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-light);
         }
-        .dark-theme .container {
-            background-color: #343a40;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        .dark-theme .navbar-brand {
+            color: var(--primary-dark);
+        }
+        .container-main {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(244, 114, 182, 0.4);
+            margin: 2rem auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark-theme .container-main {
+            background: var(--bg-dark);
+            box-shadow: 0 8px 24px rgba(109, 40, 217, 0.4);
+        }
+        .container-main:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(244, 114, 182, 0.5);
+        }
+        .dark-theme .container-main:hover {
+            box-shadow: 0 12px 32px rgba(109, 40, 217, 0.5);
         }
         h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-light);
             text-align: center;
-            color: #212529;
             margin-bottom: 2rem;
-            animation: fadeIn 1s ease-out;
         }
         .dark-theme h1 {
-            color: #d4a017;
+            color: var(--secondary-dark);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--primary-light);
+        }
+        .dark-theme h2 {
+            color: var(--primary-dark);
+        }
+        .card {
+            background: var(--bg-light);
+            border-radius: 24px;
+            border: 1px solid var(--secondary-light);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, border-color ease 0.3s;
+        }
+        .dark-theme .card {
+            background: var(--bg-dark);
+            border-color: var(--secondary-dark);
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-light);
+        }
+        .dark-theme .card:hover {
+            border-color: var(--primary-dark);
+        }
+        .form-control {
+            border-radius: 12px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-control:focus {
-            border-color: #d4a017;
-            box-shadow: 0 0 8px #d4a01780;
+            border-color: var(--secondary-light);
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+        }
+        .dark-theme .form-control:focus {
+            border-color: var(--secondary-dark);
+            box-shadow: 0 0 8px rgba(217, 119, 6, 0.5);
         }
         .btn-primary {
-            background: linear-gradient(45deg, #d4a017, #b8860b);
+            background: linear-gradient(45deg, var(--secondary-light), #F59E0B);
             border: none;
+            color: var(--text-light);
+            font-weight: 500;
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark-theme .btn-primary {
+            background: linear-gradient(45deg, var(--secondary-dark), #B45309);
+            color: var(--text-dark);
         }
         .btn-primary:hover {
             transform: scale(1.1);
-            box-shadow: 0 4px 15px #d4a01780;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+        }
+        .dark-theme .btn-primary:hover {
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
         }
         .btn-secondary {
-            background: linear-gradient(45deg, #212529, #343a40);
+            background: linear-gradient(45deg, var(--primary-light), #EC4899);
             border: none;
+            color: #FFFFFF;
+            font-weight: 500;
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark-theme .btn-secondary {
+            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
         }
         .btn-secondary:hover {
             transform: scale(1.1);
-            box-shadow: 0 4px 15px #343a4080;
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.5);
         }
-        .btn-warning {
-            background: linear-gradient(45deg, #d4a017, #b8860b);
-            border: none;
-        }
-        .btn-warning:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px #d4a01780;
+        .dark-theme .btn-secondary:hover {
+            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.5);
         }
         .btn-danger {
-            background: linear-gradient(45deg, #6c757d, #5a6268);
+            background: linear-gradient(45deg, #DC2626, #B91C1C);
             border: none;
+            color: #FFFFFF;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .btn-danger:hover {
             transform: scale(1.1);
-            box-shadow: 0 4px 15px #6c757d80;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.5);
         }
-        #agenda {
-            background: linear-gradient(135deg, #e9ecef, #f8f9fa);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin-bottom: 2rem;
-            transition: transform 0.3s ease;
+        .dropdown-toggle {
+            background: linear-gradient(45deg, var(--primary-light), var(--secondary-light));
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-size: 1.8rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .dark-theme #agenda {
-            background: linear-gradient(135deg, #343a40, #495057);
+        .dark-theme .dropdown-toggle {
+            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
         }
-        #agenda:hover {
-            transform: translateY(-5px);
+        .dropdown-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.5);
         }
-        #agenda ul {
-            list-style: none;
-            padding: 0;
+        .dark-theme .dropdown-toggle:hover {
+            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.5);
         }
-        #agenda li {
-            padding: 0.75rem;
-            border-bottom: 1px solid #ced4da;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .dropdown-menu {
+            background: var(--bg-light);
+            border: 1px solid var(--primary-light);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
+        }
+        .dark-theme .dropdown-menu {
+            background: var(--bg-dark);
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
+        }
+        .dropdown-item {
+            color: var(--text-light);
             transition: background 0.3s ease;
         }
-        #agenda li:hover {
-            background: #d4a01710;
+        .dark-theme .dropdown-item {
+            color: var(--text-dark);
         }
-        .dark-theme #agenda li {
-            border-bottom: 1px solid #495057;
+        .dropdown-item:hover {
+            background: rgba(251, 191, 36, 0.1);
         }
-        #agenda .upcoming {
-            background: linear-gradient(45deg, #d4a017, #b8860b);
-            color: #212529;
-            border-radius: 5px;
-            padding: 0.5rem;
+        .dark-theme .dropdown-item:hover {
+            background: rgba(217, 119, 6, 0.1);
         }
-        .dark-theme #agenda .upcoming {
-            color: #f8f9fa;
+        #calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 1rem;
         }
-        .input-group-text {
-            background-color: #e9ecef;
-            border-color: #d4a017;
-            color: #d4a017;
+        .dark-theme #calendar {
+            background: var(--bg-dark);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .calendar-header h3 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--primary-light);
+        }
+        .dark-theme .calendar-header h3 {
+            color: var(--primary-dark);
+        }
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .calendar-nav i {
+            cursor: pointer;
+            color: var(--secondary-light);
+            font-size: 1.2rem;
             transition: transform 0.3s ease;
         }
-        .dark-theme .input-group-text {
-            background-color: #343a40;
+        .dark-theme .calendar-nav i {
+            color: var(--secondary-dark);
         }
-        .input-group-text:hover {
-            transform: scale(1.1);
+        .calendar-nav i:hover {
+            transform: scale(1.2);
+        }
+        .calendar-day {
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            min-height: 60px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .calendar-day.header {
+            font-weight: 500;
+            color: var(--primary-light);
+        }
+        .dark-theme .calendar-day.header {
+            color: var(--primary-dark);
+        }
+        .calendar-day.has-event {
+            background: var(--secondary-light);
+            color: var(--text-light);
+            border: 2px solid var(--primary-light);
+            border-radius: 8px;
+            opacity: 0.9;
+            cursor: pointer;
+        }
+        .dark-theme .calendar-day.has-event {
+            background: var(--secondary-dark);
+            border-color: var(--primary-dark);
+            color: var(--text-dark);
+        }
+        .calendar-day.has-event:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+        }
+        .dark-theme .calendar-day.has-event:hover {
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
+        }
+        .calendar-day.today {
+            border: 3px solid var(--primary-light);
+            border-radius: 8px;
+            box-shadow: inset 0 0 0 2px rgba(251, 191, 36, 0.1);
+        }
+        .dark-theme .calendar-day.today {
+            border-color: var(--primary-dark);
+            box-shadow: inset 0 0 0 2px rgba(217, 119, 6, 0.1);
+        }
+        .calendar-event {
+            background: linear-gradient(45deg, var(--primary-light), #EC4899);
+            color: #FFFFFF;
+            padding: 0.2rem 0.5rem;
+            margin: 2px 0;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .dark-theme .calendar-event {
+            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
+        }
+        .day-events-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            transition: background 0.3s ease;
+        }
+        .dark-theme .day-events-list li {
+            border-bottom-color: #rgba(217, 119, 6, 0.2);
+        }
+        .day-events-list li:hover {
+            background: rgba(251, 191, 36, 0.1);
+        }
+        .dark-theme .day-events-list li:hover {
+            background: rgba(217, 119, 6, 0.1);
+        }
+        .event-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .event-actions .icon-btn {
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+        .event-actions .icon-btn:hover {
+            transform: scale(1.2) rotate(360deg);
+        }
+        .whatsapp-btn { color: var(--whatsapp); }
+        .whatsapp-btn:hover { color: var(--whatsapp-hover); }
+        .ok-btn { color: var(--secondary-light); }
+        .dark-theme .ok-btn { color: var(--secondary-dark); }
+        .ok-btn:hover { color: #F59E0B; animation: pulse 1s infinite; }
+        .dark-theme .ok-btn:hover { color: #B45309; }
+        .apply-btn { color: var(--text-light); }
+        .dark-theme .apply-btn { color: var(--text-dark); }
+        .apply-btn:hover { color: #374151; }
+        .dark-theme .apply-btn:hover { color: #9CA3AF; }
+        .maint-btn { color: var(--secondary-light); }
+        .dark-theme .maint-btn { color: var(--secondary-dark); }
+        .maint-btn:hover { color: #F59E0B; }
+        .dark-theme .maint-btn:hover { color: #B45309; }
+        @keyframes pulse {
+            0% { transform: scale(1.2); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1.2); }
+        }
+        .input-group-text {
+            background: rgba(243, 255, 247, 0.5);
+            border-color: var(--secondary-light);
+            color: var(--secondary-light);
+            border-radius: 12px 0 0 12px;
+        }
+        .dark-theme .input-group-text {
+            background: rgba(55, 65, 81, 0.5);
+            border-color: var(--secondary-dark);
+            color: var(--secondary-dark);
         }
         .table th {
-            background: linear-gradient(45deg, #212529, #343a40);
-            color: #d4a017;
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient(45deg, var(--primary-light), #EC4899);
+            color: #FFFFFF;
+            font-weight: 500;
+            border: none;
+        }
+        .dark-theme .table th {
+            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
         }
         .table th::after {
             content: '';
@@ -157,131 +392,63 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: #d4a017;
+            background-color: var(--secondary-light);
             transform: scaleX(0);
-            transform-origin: right;
             transition: transform 0.3s ease;
+        }
+        .dark-theme .table th::after {
+            background: var(--secondary-dark);
         }
         .table th:hover::after {
             transform: scaleX(1);
-            transform-origin: left;
-        }
-        .dark-theme .table th {
-            background: linear-gradient(45deg, #343a40, #495057);
         }
         .table td {
             transition: background 0.3s ease, transform 0.3s ease;
-            position: relative;
         }
         .table td:hover {
-            background: #d4a01710;
+            background: rgba(255, 191, 36, 0.1);
             transform: scale(1.02);
         }
-        .table td:first-child {
-            cursor: pointer;
-        }
-        .table td:first-child::before {
-            content: '\f007';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-right: 8px;
-            color: #d4a017;
-            transition: transform 0.3s ease;
-        }
-        .table td:first-child:hover::before {
-            transform: rotate(360deg);
-        }
-        .table td:first-child:active::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, #d4a01750, transparent);
-            border-radius: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            animation: ripple 0.6s ease-out;
-        }
-        @keyframes ripple {
-            to { transform: translate(-50%, -50%) scale(2); opacity: 0; }
-        }
-        .whatsapp-btn {
-            color: #25D366;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-        .whatsapp-btn:hover {
-            color: #128C7E;
-            transform: scale(1.2) rotate(360deg);
+        .dark-theme .table td:hover {
+            background: rgba(217, 217, 6, 0.1);
         }
         .whatsapp-icon {
-            font-family: 'Font Awesome 6 Free' !important;
-            font-weight: 900;
-            font-size: 1.5rem;
-            color: #25D366;
+            color: var(--whatsapp);
+            font-size: 1.1rem;
             margin-right: 5px;
-            transition: transform 0.3s ease, color 0.3s ease;
+            transition: transform 0.3s ease;
         }
         .whatsapp-icon:hover {
-            color: #128C7E;
+            color: var(--whatsapp-hover);
             transform: scale(1.2) rotate(360deg);
-        }
-        .ok-btn {
-            color: #d4a017;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-        .ok-btn:hover {
-            color: #b8860b;
-            transform: scale(1.2);
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1.2); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1.2); }
-        }
-        .apply-btn {
-            color: #212529;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-        .apply-btn:hover {
-            color: #343a40;
-            transform: scale(1.2) rotate(360deg);
-        }
-        .maint-btn {
-            color: #d4a017;
-            font-size: 1.5rem;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-        .maint-btn:hover {
-            color: #b8860b;
-            transform: scale(1.2) rotate(360deg);
-        }
-        .nav-tabs .nav-link.active {
-            background: linear-gradient(45deg, #d4a017, #b8860b);
-            color: #212529;
-            border: none;
-        }
-        .dark-theme .nav-tabs .nav-link.active {
-            color: #f8f9fa;
         }
         .search-highlight {
-            border: 2px solid #d4a017;
-            background-color: #e9ecef;
+            background-color: rgba(243, 255, 247, 0.5);
+            border: 2px solid var(--secondary-light);
             animation: highlight 1s ease-out;
         }
         .dark-theme .search-highlight {
-            background-color: #495057;
+            background: rgba(55, 65, 65, 0.5);
+            border-color: var(--secondary-dark);
         }
         @keyframes highlight {
-            from { background-color: #d4a01730; }
-            to { background-color: #e9ecef; }
+            from { background: rgba(251, 255, 36, 0.3); }
+            to { background: rgba(243, 243, 247, 0.5); }
         }
-        #searchInput:focus + .input-group-text .fa-magnifying-glass {
+        .dark-theme @keyframes highlight {
+            from { background: rgba(217, 217, 119, 6, 0.3); }
+            to { background: rgba(55, 65, 65, 81, 0.5); }
+        }
+        #searchInput {
+            border-radius: 12px;
+            max-width: 300px;
+        }
+        #searchInput:focus + .input-group-text .bi-search {
             animation: heartbeat 1s infinite;
+            color: var(--secondary-light);
+        }
+        .dark-theme #searchInput:focus + .input-group-text .bi-search {
+            color: var(--secondary-dark);
         }
         @keyframes heartbeat {
             0% { transform: scale(1); }
@@ -290,112 +457,132 @@
             60% { transform: scale(1.2); }
             80% { transform: scale(1); }
         }
-        #searchInput {
-            max-width: 400px;
-            transition: box-shadow 0.3s ease;
-        }
-        #searchInput:focus {
-            box-shadow: 0 0 10px #d4a01780;
-        }
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
         .theme-toggle {
-            color: #d4a017;
-            font-size: 2rem;
+            color: var(--secondary-light);
+            font-size: 1.8rem;
             cursor: pointer;
-            transition: transform 0.3s ease, color 0.3s ease;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .theme-toggle {
+            color: var(--secondary-dark);
         }
         .theme-toggle:hover {
-            color: #b8860b;
             transform: rotate(360deg);
         }
         #currentDateTime {
-            font-size: 1.2rem;
-            color: #d4a017;
-            animation: fadeIn 1s ease-out;
+            font-size: 1.1rem;
+            color: var(--secondary-light);
+            font-weight: 500;
         }
-        .client-details-list {
-            list-style: none;
-            padding: 0;
-        }
-        .client-details-list li {
-            padding: 0.5rem 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: color 0.3s ease;
-        }
-        .client-details-list li:hover {
-            color: #d4a017;
-        }
-        .client-details-list li i {
-            font-size: 1.2rem;
-            color: #d4a017;
-            transition: transform 0.3s ease;
-            animation: pulse 2s infinite;
-        }
-        .client-details-list li:hover i {
-            transform: scale(1.2);
-        }
-        .dark-theme .modal-content {
-            background-color: #121212;
-            animation: zoomIn 0.3s ease-out;
+        .dark-theme #currentDateTime {
+            color: var(--secondary-dark);
         }
         .modal-content {
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            border-radius: 24px;
+            background: var(--bg-light);
+            box-shadow: 0 8px 24px rgba(244, 114, 182, 0.4);
         }
-        .modal-content:hover {
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-            transform: translateY(-5px);
-        }
-        .dark-theme .modal-header, .dark-theme .modal-footer {
-            background: linear-gradient(45deg, #212529, #343a40);
-            color: #d4a017;
+        .dark-theme .modal-content {
+            background: var(--bg-dark);
+            box-shadow: 0 8px 24px rgba(109, 40, 217, 0.4);
         }
         .modal-header {
-            background: linear-gradient(45deg, #d4a017, #b8860b);
-            color: #212529;
+            background: linear-gradient(45deg, var(--primary-light), #EC4899);
+            color: #FFFFFF;
+            border-radius: 24px 24px 0 0;
         }
-        @keyframes zoomIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        .dark-theme .modal-header {
+            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
         }
-        .modal-body .btn i {
-            transition: transform 0.3s ease;
+        .modal-footer {
+            border: none;
+            justify-content: flex-end;
         }
-        .modal-body .btn:hover i {
-            transform: rotate(360deg);
+        .client-details-list {
+            li {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 0.5rem 0;
+            }
+        }
+            .client-details-list li i {
+                color: var(--secondary-light);
+                font-size: 1.1rem;
+                animation: pulse 2s infinite;
+            }
+        }
+        .dark-theme .client-details-list li i {
+            color: var(--secondary-dark);
+        }
+        @media (max-width: 768px) {
+            .container-main {
+                padding: 1rem;
+            }
+            .calendar-day {
+                font-size: 0.7rem;
+                min-height: 60px;
+                padding: 0.3rem;
+            }
+            .calendar-event {
+                font-size: 0.7rem;
+                padding: 0.1rem 0.3rem;
+            }
+            .day-events-list li {
+                font-size: 0.9rem;
+                padding: 0.5rem 0;
+            }
+            .navbar-brand {
+                font-size: 1.6rem;
+            }
+            .theme-toggle, .dropdown-toggle {
+                font-size: 1.5rem;
+            }
+            #currentDateTime {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header" data-aos="fade-down">
-            <i id="themeToggle" class="fas fa-sun theme-toggle"></i>
-            <span id="currentDateTime"></span>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Gerenciamento de Cílios</a>
+            <div class="d-flex align-items-center gap-2">
+                <span id="currentDateTime"></span>
+                <i id="themeToggle" class="bi bi-sun-fill theme-toggle" aria-label="Alternar tema"></i>
+                <div class="dropdown">
+                    <button class="dropdown-toggle" type="button" id="actionMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="actionMenu">
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">Novo Cliente</a></li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#messageConfigModal">Configurar Mensagens</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <h1 data-aos="fade-down">Gerenciamento de Cílios</h1>
-        <div id="agenda" data-aos="fade-up">
-            <h2><i class="fas fa-calendar-days"></i> Agenda de Manutenções</h2>
-            <ul id="agenda-list"></ul>
+    </nav>
+    <div class="container-main">
+        <div id="agenda" class="card" data-aos="fade-up">
+            <div class="card-body">
+                <h2><i class="bi bi-calendar-week-fill"></i> Agenda de Manutenções</h2>
+                <div class="calendar-header">
+                    <h3 id="calendarTitle"></h3>
+                    <div class="calendar-nav">
+                        <i class="bi bi-chevron-left" id="prevMonth"></i>
+                        <i class="bi bi-chevron-right" id="nextMonth"></i>
+                    </div>
+                </div>
+                <div id="calendar"></div>
+            </div>
         </div>
-        <div class="d-flex gap-2 mb-4">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cadastroModal" data-aos="fade-up"><i class="fas fa-plus-circle"></i> Cadastrar Cliente</button>
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#messageConfigModal" data-aos="fade-up"><i class="fas fa-gear"></i> Configurar Mensagens</button>
-        </div>
-        <div id="clients-list" data-aos="fade-up">
-            <h2><i class="fas fa-users"></i> Clientes Cadastrados</h2>
+        <div id="clients-list" class="card" data-aos="fade-up">
+            <h2><i class="bi bi-people-fill"></i> Clientes Cadastrados</h2>
             <div class="mb-3">
-                <div class="input-group" style="max-width: 100vw;">
-                    <span class="input-group-text"><i class="fas fa-magnifying-glass"></i></span>
-                    <input type="text" class="form-control" id="searchInput" placeholder="Pesquisar por nome, WhatsApp ou data...">
+                <div class="input-group" style="max-width: 300px;">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Pesquisar por nome, WhatsApp ou data..." aria-label="Pesquisar clientes">
                 </div>
             </div>
             <div class="table-responsive">
@@ -406,9 +593,7 @@
                             <th>WhatsApp</th>
                         </tr>
                     </thead>
-                    <tbody id="clients-table-body">
-                        <!-- Clients will be added here -->
-                    </tbody>
+                    <tbody id="clients-table-body"></tbody>
                 </table>
             </div>
         </div>
@@ -424,590 +609,674 @@
                 </div>
                 <div class="modal-body">
                     <form id="cadastroForm">
-                        <input type="hidden" id="editIndex" name="editIndex">
+                        <input type="hidden" id="editId" name="editId">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nome:</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" class="form-control" id="name" name="name" required aria-label="Nome do cliente">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="whatsapp" class="form-label">WhatsApp:</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fab fa-whatsapp"></i></span>
-                                <input type="tel" class="form-control" id="whatsapp" name="whatsapp" pattern="\+55\s?\d{2}\s?\d{9}" placeholder="+55 11 91234-5678" required>
+                                <span class="input-group-text"><i class="bi bi-chat-square-whatsapp"></i></span>
+                                <input type="tel" class="form-control" id="whatsapp" name="whatsapp" pattern="\+55\s?\d{2}\s?\d{9}" placeholder="+55 11 91234-5678" required aria-label="WhatsApp do cliente">
                             </div>
                             <small class="form-text text-muted">Formato: +55 11 91234-5678</small>
                         </div>
                         <div class="mb-3">
                             <label for="application_date" class="form-label">Data da Aplicação:</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-calendar-day"></i></span>
-                                <input type="date" class="form-control" id="application_date" name="application_date" required>
+                                <span class="input-group-text"><i class="bi bi-calendar-date-fill"></i></span>
+                                <input type="date" class="form-control" id="application_date" name="application_date" required aria-label="Data da aplicação">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="application_time" class="form-label">Horário da Aplicação:</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-clock"></i></span>
-                                <input type="time" class="form-control" id="application_time" name="application_time" min="08:00" max="18:00" required>
+                                <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
+                                <input type="time" class="form-control" id="application_time" name="application_time" min="08:00" max="18:00" required aria-label="Horário da aplicação">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="maintenance_date" class="form-label">Data da Manutenção:</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                                <input type="date" class="form-control" id="maintenance_date" name="maintenance_date" required>
+                                <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
+                                <input type="date" class="form-control" id="maintenance_date" name="maintenance_date" required aria-label="Data da manutenção">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="maintenance_time" class="form-label">Horário da Manutenção:</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-clock"></i></span>
-                                <input type="time" class="form-control" id="maintenance_time" name="maintenance_time" min="08:00" max="18:00" required>
+                                <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
+                                <input type="time" class="form-control" id="maintenance_time" name="maintenance_time" min="08:00" max="18:00" required aria-label="Horário da manutenção">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label for="application_value" class="form-label">Valor da Aplicação:</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                                <input type="number" class="form-control" id="application_value" name="application_value" step="0.01" min="0" required>
+                                <span class="input-group-text"><i class="bi bi-currency-exchange"></i></span>
+                                <input type="number" class="form-control" id="application_value" name="application_value" step="0.01" min="0" required aria-label="Valor da aplicação">
                             </div>
                         </div>
-        <div class="mb-3">
-            <label for="maintenance_value" class="form-label">Valor da Manutenção:</label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                <input type="number" class="form-control" id="maintenance_value" name="maintenance_value" step="0.01" min="0" required>
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="eyelash_model" class="form-label">Modelo do Cílios:</label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-eye"></i></span>
-                <select class="form-control" id="eyelash_model" name="eyelash_model" required>
-                    <option value="">Selecione o modelo</option>
-                    <option value="brasileiro">Brasileiro</option>
-                    <option value="egipcio">Egípcio</option>
-                    <option value="4d">4D</option>
-                    <option value="5d">5D</option>
-                    <option value="fio_a_fio">Fio a Fio</option>
-                    <option value="fox">Fox</option>
-                </select>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary"><i class="fas fa-floppy-disk"></i> Salvar</button>
-    </form>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Modal de Configuração de Mensagens -->
-<div class="modal fade" id="messageConfigModal" tabindex="-1" aria-labelledby="messageConfigModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="messageConfigModalLabel">Configurar Mensagens do WhatsApp</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <ul class="nav nav-tabs" id="messageTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="true">Aplicação</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="maintenance-tab" data-bs-toggle="tab" data-bs-target="#maintenance" type="button" role="tab" aria-controls="maintenance" aria-selected="false">Manutenção</button>
-                </li>
-            </ul>
-            <div class="tab-content" id="messageTabContent">
-                <div class="tab-pane fade show active" id="application" role="tabpanel" aria-labelledby="application-tab">
-                    <form id="applicationMessageForm" class="mt-3">
                         <div class="mb-3">
-                            <label for="applicationMessageTemplate" class="form-label">Modelo da Mensagem de Aplicação:</label>
-                            <textarea class="form-control" id="applicationMessageTemplate" name="applicationMessageTemplate" rows="5" required></textarea>
-                            <small class="form-text text-muted">Use as variáveis: {nome}, {data_aplicacao}, {hora_aplicacao}, {valor_aplicacao}, {data_manutencao}, {hora_manutencao}, {valor_manutencao}</small>
+                            <label for="maintenance_value" class="form-label">Valor da Manutenção:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-exchange"></i></span>
+                                <input type="number" class="form-control" id="maintenance_value" name="maintenance_value" step="0.01" min="0" required aria-label="Valor da manutenção">
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-floppy-disk"></i> Salvar</button>
-                    </form>
-                </div>
-                <div class="tab-pane fade" id="maintenance" role="tabpanel" aria-labelledby="maintenance-tab">
-                    <form id="maintenanceMessageForm" class="mt-3">
                         <div class="mb-3">
-                            <label for="maintenanceMessageTemplate" class="form-label">Modelo da Mensagem de Manutenção:</label>
-                            <textarea class="form-control" id="maintenanceMessageTemplate" name="maintenanceMessageTemplate" rows="5" required></textarea>
-                            <small class="form-text text-muted">Use as variáveis: {nome}, {data_aplicacao}, {hora_aplicacao}, {valor_aplicacao}, {data_manutencao}, {hora_manutencao}, {valor_manutencao}</small>
+                            <label for="eyelash_model" class="form-label">Modelo do Cílios:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-eye-fill"></i></span>
+                                <select class="form-control" id="eyelash_model" name="eyelash_model" required aria-label="Modelo do cílios">
+                                    <option value="">Selecione o modelo</option>
+                                    <option value="brasileiro">Brasileiro</option>
+                                    <option value="egipcio">Egípcio</option>
+                                    <option value="4d">4D</option>
+                                    <option value="5d">5D</option>
+                                    <option value="fio_a_fio">Fio a Fio</option>
+                                    <option value="fox">Fox</option>
+                                </select>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-floppy-disk"></i> Salvar</button>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" aria-label="Salvar cliente"><i class="bi bi-save-fill"></i> Salvar</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
 
-<!-- Modal de Nova Manutenção -->
-<div class="modal fade" id="newMaintenanceModal" tabindex="-1" aria-labelledby="newMaintenanceModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="newMaintenanceModalLabel">Agendar Nova Manutenção</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form id="newMaintenanceForm">
-                <input type="hidden" id="maintenanceIndex" name="maintenanceIndex">
-                <div class="mb-3">
-                    <label for="new_maintenance_date" class="form-label">Data da Manutenção:</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                        <input type="date" class="form-control" id="new_maintenance_date" name="new_maintenance_date" required>
+    <!-- Modal de Configuração de Mensagens -->
+    <div class="modal fade" id="messageConfigModal" tabindex="-1" aria-labelledby="messageConfigModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messageConfigModalLabel">Configurar Mensagens do WhatsApp</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="messageTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="true">Aplicação</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="maintenance-tab" data-bs-toggle="tab" data-bs-target="#maintenance" type="button" role="tab" aria-controls="maintenance" aria-selected="false">Manutenção</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="messageTabContent">
+                        <div class="tab-pane fade show active" id="application" role="tabpanel" aria-labelledby="application-tab">
+                            <form id="applicationMessageForm" class="mt-3">
+                                <div class="mb-3">
+                                    <label for="applicationMessageTemplate" class="form-label">Modelo da Mensagem de Aplicação:</label>
+                                    <textarea class="form-control" id="applicationMessageTemplate" name="applicationMessageTemplate" rows="5" required aria-label="Template de mensagem de aplicação"></textarea>
+                                    <small class="form-text text-muted">Use as variáveis: {nome}, {data_aplicacao}, {hora_aplicacao}, {valor_aplicacao}, {data_manutencao}, {hora_manutencao}, {valor_manutencao}</small>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" aria-label="Salvar template de aplicação"><i class="bi bi-save-fill"></i> Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="maintenance" role="tabpanel" aria-labelledby="maintenance-tab">
+                            <form id="maintenanceMessageForm" class="mt-3">
+                                <div class="mb-3">
+                                    <label for="maintenanceMessageTemplate" class="form-label">Modelo da Mensagem de Manutenção:</label>
+                                    <textarea class="form-control" id="maintenanceMessageTemplate" name="maintenanceMessageTemplate" rows="5" required aria-label="Template de mensagem de manutenção"></textarea>
+                                    <small class="form-text text-muted">Use as variáveis: {nome}, {data_aplicacao}, {hora_aplicacao}, {valor_aplicacao}, {data_manutencao}, {hora_manutencao}, {valor_manutencao}</small>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary" aria-label="Salvar template de manutenção"><i class="bi bi-save-fill"></i> Salvar</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="new_maintenance_time" class="form-label">Horário da Manutenção:</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-clock"></i></span>
-                        <input type="time" class="form-control" id="new_maintenance_time" name="new_maintenance_time" min="08:00" max="18:00" required>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="new_maintenance_value" class="form-label">Valor da Manutenção:</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-                        <input type="number" class="form-control" id="new_maintenance_value" name="new_maintenance_value" step="0.01" min="0" required>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="new_eyelash_model" class="form-label">Modelo do Cílios:</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-eye"></i></span>
-                        <select class="form-control" id="new_eyelash_model" name="new_eyelash_model" required>
-                            <option value="">Selecione o modelo</option>
-                            <option value="brasileiro">Brasileiro</option>
-                            <option value="egipcio">Egípcio</option>
-                            <option value="4d">4D</option>
-                            <option value="5d">5D</option>
-                            <option value="fio_a_fio">Fio a Fio</option>
-                            <option value="fox">Fox</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-floppy-disk"></i> Salvar</button>
-            </form>
-        </div>
-    </div>
-</div>
-</div>
-
-<!-- Modal de Detalhes do Cliente -->
-<div class="modal fade" id="clientDetailsModal" tabindex="-1" aria-labelledby="clientDetailsModalLabel" aria-hidden="true">
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="clientDetailsModalLabel">Detalhes do Cliente</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <ul class="client-details-list" id="client-details-list">
-                <!-- Details will be added here -->
-            </ul>
-            <div class="d-flex gap-2 mt-3">
-                <a id="whatsappApplicationLink" href="#" target="_blank" class="btn btn-primary"><i class="fas fa-calendar-plus"></i> Enviar Mensagem de Aplicação</a>
-                <a id="whatsappMaintenanceLink" href="#" target="_blank" class="btn btn-primary"><i class="fas fa-wrench"></i> Enviar Mensagem de Manutenção</a>
-            </div>
-            <div class="d-flex gap-2 mt-3">
-                <button id="editClientButton" class="btn btn-warning"><i class="fas fa-pencil"></i> Editar</button>
-                <button id="deleteClientButton" class="btn btn-danger"><i class="fas fa-trash"></i> Excluir</button>
             </div>
         </div>
     </div>
-</div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script>
-    const eyelashModels = {
-        brasileiro: 'Brasileiro',
-        egipcio: 'Egípcio',
-        '4d': '4D',
-        '5d': '5D',
-        fio_a_fio: 'Fio a Fio',
-        fox: 'Fox'
-    };
+    <!-- Modal de Nova Manutenção -->
+    <div class="modal fade" id="newMaintenanceModal" tabindex="-1" aria-labelledby="newMaintenanceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newMaintenanceModalLabel">Agendar Nova Manutenção</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newMaintenanceForm">
+                        <input type="hidden" id="maintenanceId" name="maintenanceId">
+                        <div class="mb-3">
+                            <label for="new_maintenance_date" class="form-label">Data da Manutenção:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
+                                <input type="date" class="form-control" id="new_maintenance_date" name="new_maintenance_date" required aria-label="Nova data da manutenção">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_maintenance_time" class="form-label">Horário da Manutenção:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
+                                <input type="time" class="form-control" id="new_maintenance_time" name="new_maintenance_time" min="08:00" max="18:00" required aria-label="Novo horário da manutenção">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_maintenance_value" class="form-label">Valor da Manutenção:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-exchange"></i></span>
+                                <input type="number" class="form-control" id="new_maintenance_value" name="new_maintenance_value" step="0.01" min="0" required aria-label="Novo valor da manutenção">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_eyelash_model" class="form-label">Modelo do Cílios:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-eye-fill"></i></span>
+                                <select class="form-control" id="new_eyelash_model" name="new_eyelash_model" required aria-label="Novo modelo do cílios">
+                                    <option value="">Selecione o modelo</option>
+                                    <option value="brasileiro">Brasileiro</option>
+                                    <option value="egipcio">Egípcio</option>
+                                    <option value="4d">4D</option>
+                                    <option value="5d">5D</option>
+                                    <option value="fio_a_fio">Fio a Fio</option>
+                                    <option value="fox">Fox</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" aria-label="Salvar nova manutenção"><i class="bi bi-save-fill"></i> Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    const defaultApplicationMessageTemplate = `💖 *Lembrete de agendamento*
+    <!-- Modal de Detalhes do Cliente -->
+    <div class="modal fade" id="clientDetailsModal" tabindex="-1" aria-labelledby="clientDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clientDetailsModalLabel">Detalhes do Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="client-details-list" id="client-details-list"></ul>
+                    <div class="modal-footer">
+                        <a id="whatsappApplicationLink" href="#" target="_blank" class="btn btn-primary" aria-label="Enviar mensagem de aplicação"><i class="bi bi-calendar-check"></i> Aplicação</a>
+                        <a id="whatsappMaintenanceLink" href="#" target="_blank" class="btn btn-primary" aria-label="Enviar mensagem de manutenção"><i class="bi bi-wrench-adjustable"></i> Manutenção</a>
+                        <button id="editClientButton" class="btn btn-primary" aria-label="Editar cliente"><i class="bi bi-pencil-square"></i> Editar</button>
+                        <button id="deleteClientButton" class="btn btn-danger" aria-label="Excluir cliente"><i class="bi bi-trash-fill"></i> Excluir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-Olá {nome}, tudo bem?
+    <!-- Modal de Eventos do Dia -->
+    <div class="modal fade" id="dayEventsModal" tabindex="-1" aria-labelledby="dayEventsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dayEventsModalLabel">Eventos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="day-events-list" id="day-events-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-✨ Sua aplicação de cílios está agendada para *{data_aplicacao}*.
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        const API_CLIENTS = 'https://683d14e6199a0039e9e427bd.mockapi.io/Dados';
 
-Confira os detalhes abaixo:
+        const eyelashModels = {
+            brasileiro: 'Brasileiro',
+            egipcio: 'Egípcio',
+            '4d': '4D',
+            '5d': '5D',
+            fio_a_fio: 'Fio a Fio',
+            fox: 'Fox'
+        };
 
-⏰ Horário: {hora_aplicacao}
-💸 Valor: {valor_aplicacao}
+        const defaultApplicationMessageTemplate = `💖 *Lembrete de agendamento*\n\nOlá {nome}, tudo bem?\n\n✨ Sua aplicação de cílios está agendada para *{data_aplicacao}*.\n\nConfira os detalhes abaixo:\n\n⏰ Horário: {hora_aplicacao}\n💸 Valor: {valor_aplicacao}\n\n📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.\n\n📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.\n\nEm caso de dúvidas ou imprevistos, é só me chamar! 💬\nAgradeço pela confiança 💕`;
 
-📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.
+        const defaultMaintenanceMessageTemplate = `💖 *Lembrete de agendamento*\n\nOlá {nome}, tudo bem?\n\n✨ Sua manutenção de cílios está agendada para *{data_manutencao}*.\n\nConfira os detalhes abaixo:\n\n⏰ Horário: {hora_manutencao}\n💸 Valor: {valor_manutencao}\n\n📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.\n\n📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.\n\nEm caso de dúvidas ou imprevistos, é só me chamar! 💬\nAgradeço pela confiança 💕`;
 
-📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.
+        let currentDate = new Date();
 
-Em caso de dúvidas ou imprevistos, é só me chamar! 💬
-Agradeço pela confiança 💕`;
-
-    const defaultMaintenanceMessageTemplate = `💖 *Lembrete de agendamento*
-
-Olá {nome}, tudo bem?
-
-✨ Sua manutenção de cílios está agendada para *{data_manutencao}*.
-
-Confira os detalhes abaixo:
-
-⏰ Horário: {hora_manutencao}
-💸 Valor: {valor_manutencao}
-
-📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.
-
-📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.
-
-Em caso de dúvidas ou imprevistos, é só me chamar! 💬
-Agradeço pela confiança 💕`;
-
-    function formatDate(dateStr) {
-        const [year, month, day] = dateStr.split('-');
-        return `${day}/${month}/${year}`;
-    }
-
-    function formatTime(timeStr) {
-        const [hours, minutes] = timeStr.split(':');
-        return `${hours}:${minutes}`;
-    }
-
-    function updateDateTime() {
-        const now = new Date();
-        const day = String(now.getDate()).padStart(2, '0');
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        document.getElementById('currentDateTime').textContent = `${day}/${month}/${year} ${hours}:${minutes}`;
-    }
-
-    function toggleTheme() {
-        const body = document.body;
-        const themeToggle = document.getElementById('themeToggle');
-        if (body.classList.contains('dark-theme')) {
-            body.classList.remove('dark-theme');
-            themeToggle.classList.remove('fa-moon');
-            themeToggle.classList.add('fa-sun');
-            localStorage.setItem('theme', 'light');
-        } else {
-            body.classList.add('dark-theme');
-            themeToggle.classList.remove('fa-sun');
-            themeToggle.classList.add('fa-moon');
-            localStorage.setItem('theme', 'dark');
-        }
-    }
-
-    function getClients() {
-        return new Promise((resolve) => {
-            const clientsJson = localStorage.getItem('clients');
-            resolve(clientsJson ? JSON.parse(clientsJson) : []);
-        });
-    }
-
-    function saveClients(clients) {
-        return new Promise((resolve) => {
-            localStorage.setItem('clients', JSON.stringify(clients));
-            resolve();
-        });
-    }
-
-    function getApplicationMessageTemplate() {
-        return localStorage.getItem('applicationMessageTemplate') || defaultApplicationMessageTemplate;
-    }
-
-    function saveApplicationMessageTemplate(template) {
-        localStorage.setItem('applicationMessageTemplate', template);
-    }
-
-    function getMaintenanceMessageTemplate() {
-        return localStorage.getItem('maintenanceMessageTemplate') || defaultMaintenanceMessageTemplate;
-    }
-
-    function saveMaintenanceMessageTemplate(template) {
-        localStorage.setItem('maintenanceMessageTemplate', template);
-    }
-
-    function validateForm(client) {
-        const today = new Date().toISOString().split('T')[0];
-        if (client.maintenance_date < client.application_date) {
-            alert('A data da manutenção deve ser após a data da aplicação.');
-            return false;
-        }
-        if (client.application_date < today) {
-            alert('A data da aplicação não pode ser anterior a hoje.');
-            return false;
-        }
-        const whatsappRegex = /^\+55\s?\d{2}\s?\d{9}$/;
-        if (!whatsappRegex.test(client.whatsapp)) {
-            alert('Por favor, insira um WhatsApp válido no formato +55 11 91234-5678.');
-            return false;
-        }
-        return true;
-    }
-
-    function validateMaintenanceForm(maintenance) {
-        const today = new Date().toISOString().split('T')[0];
-        if (maintenance.new_maintenance_date < today) {
-            alert('A data da manutenção não pode ser anterior a hoje.');
-            return false;
-        }
-        return true;
-    }
-
-    function generateWhatsAppMessage(client, type) {
-        const template = type === 'application' ? getApplicationMessageTemplate() : getMaintenanceMessageTemplate();
-        return template
-            .replace('{nome}', client.name)
-            .replace('{data_aplicacao}', formatDate(client.application_date))
-            .replace('{hora_aplicacao}', formatTime(client.application_time))
-            .replace('{valor_aplicacao}', parseFloat(client.application_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
-            .replace('{data_manutencao}', formatDate(client.maintenance_date))
-            .replace('{hora_manutencao}', formatTime(client.maintenance_time))
-            .replace('{valor_manutencao}', parseFloat(client.maintenance_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
-    }
-
-    function generateWhatsAppLink(client, type) {
-        const message = generateWhatsAppMessage(client, type);
-        const encodedMessage = encodeURIComponent(message);
-        return `https://wa.me/${client.whatsapp.replace(/\s/g, '')}?text=${encodedMessage}`;
-    }
-
-    async function showClientDetails(index) {
-        const clients = await getClients();
-        const client = clients[index];
-        const detailsList = document.getElementById('client-details-list');
-        detailsList.innerHTML = `
-            <li><i class="fas fa-user"></i> <strong>Nome:</strong> ${client.name}</li>
-            <li><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> ${client.whatsapp}</li>
-            <li><i class="fas fa-calendar-day"></i> <strong>Data da Aplicação:</strong> ${formatDate(client.application_date)}</li>
-            <li><i class="fas fa-clock"></i> <strong>Horário da Aplicação:</strong> ${formatTime(client.application_time)}</li>
-            <li><i class="fas fa-calendar-check"></i> <strong>Data da Manutenção:</strong> ${formatDate(client.maintenance_date)}</li>
-            <li><i class="fas fa-clock"></i> <strong>Horário da Manutenção:</strong> ${formatTime(client.maintenance_time)}</li>
-            <li><i class="fas fa-dollar-sign"></i> <strong>Valor da Aplicação:</strong> ${parseFloat(client.application_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</li>
-            <li><i class="fas fa-dollar-sign"></i> <strong>Valor da Manutenção:</strong> ${parseFloat(client.maintenance_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</li>
-            <li><i class="fas fa-eye"></i> <strong>Modelo do Cílios:</strong> ${eyelashModels[client.eyelash_model] || client.eyelash_model}</li>
-        `;
-        document.getElementById('whatsappApplicationLink').href = generateWhatsAppLink(client, 'application');
-        document.getElementById('whatsappMaintenanceLink').href = generateWhatsAppLink(client, 'maintenance');
-        document.getElementById('editClientButton').onclick = () => editClient(index);
-        document.getElementById('deleteClientButton').onclick = () => deleteClient(index);
-        bootstrap.Modal.getOrCreateInstance(document.getElementById('clientDetailsModal')).show();
-    }
-
-    async function updateClientsTable(searchTerm = '') {
-        const clients = await getClients();
-        const tbody = document.getElementById('clients-table-body');
-        tbody.innerHTML = '';
-        let filteredClients = clients.map((client, index) => ({ ...client, index }));
-        
-        if (searchTerm) {
-            const lowerSearchTerm = searchTerm.toLowerCase();
-            filteredClients = filteredClients.filter(client => 
-                client.name.toLowerCase().includes(lowerSearchTerm) ||
-                client.whatsapp.toLowerCase().includes(lowerSearchTerm) ||
-                formatDate(client.application_date).includes(lowerSearchTerm) ||
-                formatDate(client.maintenance_date).includes(lowerSearchTerm)
-            );
+        function formatDate(dateStr) {
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
         }
 
-        filteredClients.forEach((client, idx) => {
-            const row = document.createElement('tr');
-            const isHighlighted = searchTerm && (
-                client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                client.whatsapp.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                formatDate(client.application_date).includes(searchTerm.toLowerCase()) ||
-                formatDate(client.maintenance_date).includes(searchTerm.toLowerCase())
-            );
-            if (isHighlighted) row.classList.add('search-highlight');
-            row.setAttribute('data-aos', 'fade-up');
-            row.setAttribute('data-aos-delay', idx * 100);
-            row.innerHTML = `
-                <td onclick="showClientDetails(${client.index})">${client.name}</td>
-                <td><i class="fab fa-whatsapp .whatsapp-icon"></i>${client.whatsapp}</td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
+        function formatTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':');
+            return `${hours}:${minutes}`;
+        }
 
-    async function updateAgenda() {
-        const clients = await getClients();
-        const agendaList = document.getElementById('agenda-list');
-        agendaList.innerHTML = '';
-        const today = new Date();
-        const oneWeekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-        const upcomingClients = clients
-            .map((client, index) => ({ ...client, index }))
-            .filter(client => {
-                const maintenanceDate = new Date(`${client.maintenance_date}T${client.maintenance_time}`);
-                return maintenanceDate >= today;
-            })
-            .sort((a, b) => {
-                const dateA = new Date(`${a.maintenance_date}T${a.maintenance_time}`);
-                const dateB = new Date(`${b.maintenance_date}T${b.maintenance_time}`);
-                return dateA - dateB;
-            });
-        upcomingClients.forEach((client, idx) => {
-            const maintenanceDate = new Date(`${client.maintenance_date}T${client.maintenance_time}`);
-            const isUpcoming = maintenanceDate <= oneWeekFromNow;
-            const li = document.createElement('li');
-            li.className = isUpcoming ? 'upcoming' : '';
-            li.setAttribute('data-aos', 'fade-right');
-            li.setAttribute('data-aos-delay', idx * 100);
-            li.innerHTML = `
-                <i class="fas fa-user"></i> 
-                ${client.name} - Manutenção: ${formatDate(client.maintenance_date)} às ${formatTime(client.maintenance_time)} ${isUpcoming ? '<span>(Próxima semana)</span>' : ''}
-                <a href="${generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="whatsapp-btn"><i class="fab fa-whatsapp"></i></a>
-                <span onclick="openNewMaintenance(${client.index})" class="ok-btn"><i class="fas fa-check-circle"></i></span>
-                <a href="${generateWhatsAppLink(client, 'application')}" target="_blank" class="apply-btn"><i class="fas fa-calendar-plus"></i></a>
-                <a href="${generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="maint-btn"><i class="fas fa-wrench"></i></a>
-            `;
-            agendaList.appendChild(li);
-        });
-    }
+        function updateDateTime() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('currentDateTime').textContent = `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
 
-    async function editClient(index) {
-        const clients = await getClients();
-        const client = clients[index];
-        const modal = document.getElementById('cadastroModal');
-        const modalTitle = document.getElementById('cadastroModalLabel');
-        modalTitle.textContent = 'Editar Cliente';
-        document.getElementById('editIndex').value = index;
-        document.getElementById('name').value = client.name;
-        document.getElementById('whatsapp').value = client.whatsapp;
-        document.getElementById('application_date').value = client.application_date;
-        document.getElementById('application_time').value = client.application_time;
-        document.getElementById('maintenance_date').value = client.maintenance_date;
-        document.getElementById('maintenance_time').value = client.maintenance_time;
-        document.getElementById('application_value').value = client.application_value;
-        document.getElementById('maintenance_value').value = client.maintenance_value;
-        document.getElementById('eyelash_model').value = client.eyelash_model;
-        bootstrap.Modal.getOrCreateInstance(modal).show();
-        bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
-    }
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                themeToggle.classList.remove('bi-moon-stars-fill');
+                themeToggle.classList.add('bi-sun-fill');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-theme');
+                themeToggle.classList.remove('bi-sun-fill');
+                themeToggle.classList.add('bi-moon-stars-fill');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
 
-    async function deleteClient(index) {
-        if (confirm('Deseja realmente excluir este cliente?')) {
+        async function getClients() {
+            try {
+                const response = await fetch(API_CLIENTS);
+                if (!response.ok) throw new Error('Erro ao buscar clientes');
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                alert('Falha ao carregar clientes. Tente novamente.');
+                return [];
+            }
+        }
+
+        async function saveClients(client, isEdit = false) {
+            try {
+                const method = isEdit ? 'PUT' : 'POST';
+                const url = isEdit ? `${API_CLIENTS}/${client.id}` : API_CLIENTS;
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(client)
+                });
+                if (!response.ok) throw new Error('Erro ao salvar cliente');
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                alert('Falha ao salvar cliente. Tente novamente.');
+            }
+        }
+
+        async function deleteClient(id) {
+            try {
+                const response = await fetch(`${API_CLIENTS}/${id}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Erro ao excluir cliente');
+                return true;
+            } catch (error) {
+                console.error(error);
+                alert('Falha ao excluir cliente. Tente novamente.');
+                return false;
+            }
+        }
+
+        function getApplicationMessageTemplate() {
+            return localStorage.getItem('applicationMessageTemplate') || defaultApplicationMessageTemplate;
+        }
+
+        function saveApplicationMessageTemplate(template) {
+            localStorage.setItem('applicationMessageTemplate', template);
+        }
+
+        function getMaintenanceMessageTemplate() {
+            return localStorage.getItem('maintenanceMessageTemplate') || defaultMaintenanceMessageTemplate;
+        }
+
+        function saveMaintenanceMessageTemplate(template) {
+            localStorage.setItem('maintenanceMessageTemplate', template);
+        }
+
+        function validateForm(client) {
+            const today = new Date().toISOString().split('T')[0];
+            if (client.maintenance_date < client.application_date) {
+                alert('A data da manutenção deve ser após a data da aplicação.');
+                return false;
+            }
+            if (client.application_date < today) {
+                alert('A data da aplicação não pode ser anterior a hoje.');
+                return false;
+            }
+            const whatsappRegex = /^\+55\s?\d{2}\s?\d{9}$/;
+            if (!whatsappRegex.test(client.whatsapp)) {
+                alert('Por favor, insira um WhatsApp válido no formato +55 11 91234-5678.');
+                return false;
+            }
+            return true;
+        }
+
+        function validateMaintenanceForm(maintenance) {
+            const today = new Date().toISOString().split('T')[0];
+            if (maintenance.new_maintenance_date < today) {
+                alert('A data da manutenção não pode ser anterior a hoje.');
+                return false;
+            }
+            return true;
+        }
+
+        async function generateWhatsAppMessage(client, type) {
+            const template = type === 'application' ? getApplicationMessageTemplate() : getMaintenanceMessageTemplate();
+            return template
+                .replace('{nome}', client.name)
+                .replace('{data_aplicacao}', formatDate(client.application_date))
+                .replace('{hora_aplicacao}', formatTime(client.application_time))
+                .replace('{valor_aplicacao}', parseFloat(client.application_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
+                .replace('{data_manutencao}', formatDate(client.maintenance_date))
+                .replace('{hora_manutencao}', formatTime(client.maintenance_time))
+                .replace('{valor_manutencao}', parseFloat(client.maintenance_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+        }
+
+        async function generateWhatsAppLink(client, type) {
+            const message = await generateWhatsAppMessage(client, type);
+            const encodedMessage = encodeURIComponent(message);
+            return `https://wa.me/${client.whatsapp.replace(/\s/g, '')}?text=${encodedMessage}`;
+        }
+
+        async function openWhatsAppLink(id, type) {
             const clients = await getClients();
-            clients.splice(index, 1);
-            await saveClients(clients);
-            await updateClientsTable(document.getElementById('searchInput').value);
-            await updateAgenda();
+            const client = clients.find(c => c.id === id);
+            if (!client) {
+                alert('Cliente não encontrado.');
+                return;
+            }
+            const link = await generateWhatsAppLink(client, type);
+            window.open(link, '_blank');
+        }
+
+        async function showClientDetails(id) {
+            const clients = await getClients();
+            const client = clients.find(c => c.id === id);
+            if (!client) {
+                alert('Cliente não encontrado.');
+                return;
+            }
+            const detailsList = document.getElementById('client-details-list');
+            detailsList.innerHTML = `
+                <li><i class="bi bi-person-fill"></i> <strong>Nome:</strong> ${client.name}</li>
+                <li><i class="bi bi-chat-square-whatsapp"></i> <strong>WhatsApp:</strong> ${client.whatsapp}</li>
+                <li><i class="bi bi-calendar-date-fill"></i> <strong>Data da Aplicação:</strong> ${formatDate(client.application_date)}</li>
+                <li><i class="bi bi-clock-fill"></i> <strong>Horário da Aplicação:</strong> ${formatTime(client.application_time)}</li>
+                <li><i class="bi bi-calendar-event-fill"></i> <strong>Data da Manutenção:</strong> ${formatDate(client.maintenance_date)}</li>
+                <li><i class="bi bi-clock-fill"></i> <strong>Horário da Manutenção:</strong> ${formatTime(client.maintenance_time)}</li>
+                <li><i class="bi bi-currency-exchange"></i> <strong>Valor da Aplicação:</strong> ${parseFloat(client.application_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</li>
+                <li><i class="bi bi-currency-exchange"></i> <strong>Valor da Manutenção:</strong> ${parseFloat(client.maintenance_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</li>
+                <li><i class="bi bi-eye-fill"></i> <strong>Modelo do Cílios:</strong> ${eyelashModels[client.eyelash_model] || client.eyelash_model}</li>
+            `;
+            document.getElementById('whatsappApplicationLink').href = await generateWhatsAppLink(client, 'application');
+            document.getElementById('whatsappMaintenanceLink').href = await generateWhatsAppLink(client, 'maintenance');
+            document.getElementById('editClientButton').onclick = () => editClient(id);
+            document.getElementById('deleteClientButton').onclick = () => deleteClient(id);
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('clientDetailsModal')).show();
+        }
+
+        async function showDayEvents(dateStr) {
+            const clients = await getClients();
+            const events = clients.filter(client => client.maintenance_date === dateStr);
+            const modal = document.getElementById('dayEventsModal');
+            const modalTitle = document.getElementById('dayEventsModalLabel');
+            const eventsList = document.getElementById('day-events-list');
+            modalTitle.textContent = `Eventos em ${formatDate(dateStr)}`;
+            eventsList.innerHTML = '';
+            for (const client of events) {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span onclick="showClientDetails('${client.id}')">${client.name} - ${formatTime(client.maintenance_time)}</span>
+                    <div class="event-actions">
+                        <a href="${await generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="icon-btn whatsapp-btn"><i class="bi bi-chat-square-whatsapp"></i></a>
+                        <span onclick="openNewMaintenance('${client.id}')" class="icon-btn ok-btn"><i class="bi bi-check-circle-fill"></i></span>
+                        <a href="${await generateWhatsAppLink(client, 'application')}" target="_blank" class="icon-btn apply-btn"><i class="bi bi-calendar-check"></i></a>
+                        <a href="${await generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="icon-btn maint-btn"><i class="bi bi-wrench-adjustable"></i></a>
+                    </div>
+                `;
+                eventsList.appendChild(li);
+            }
+            bootstrap.Modal.getOrCreateInstance(modal).show();
+        }
+
+        async function updateClientsTable(searchTerm = '') {
+            const clients = await getClients();
+            const tbody = document.getElementById('clients-table-body');
+            tbody.innerHTML = '';
+            let filteredClients = clients.map(client => ({ ...client }));
+            
+            if (searchTerm) {
+                const lowerSearchTerm = searchTerm.toLowerCase();
+                filteredClients = filteredClients.filter(client => 
+                    client.name.toLowerCase().includes(lowerSearchTerm) ||
+                    client.whatsapp.toLowerCase().includes(lowerSearchTerm) ||
+                    formatDate(client.application_date).includes(lowerSearchTerm) ||
+                    formatDate(client.maintenance_date).includes(lowerSearchTerm)
+                );
+            }
+
+            filteredClients.forEach((client, idx) => {
+                const row = document.createElement('tr');
+                const isHighlighted = searchTerm && (
+                    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    client.whatsapp.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    formatDate(client.application_date).includes(searchTerm.toLowerCase()) ||
+                    formatDate(client.maintenance_date).includes(searchTerm.toLowerCase())
+                );
+                if (isHighlighted) row.classList.add('search-highlight');
+                row.setAttribute('data-aos', 'fade-up');
+                row.setAttribute('data-aos-delay', idx * 100);
+                row.innerHTML = `
+                    <td onclick="showClientDetails('${client.id}')"><i class="bi bi-person-fill"></i> ${client.name}</td>
+                    <td onclick="openWhatsAppLink('${client.id}', 'application')"><i class="bi bi-chat-square-whatsapp whatsapp-icon"></i> ${client.whatsapp}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function updateCalendar() {
+            const clients = await getClients();
+            const calendar = document.getElementById('calendar');
+            const calendarTitle = document.getElementById('calendarTitle');
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const today = new Date();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+
+            calendarTitle.textContent = `${firstDay.toLocaleString('pt-BR', { month: 'long' })} ${year}`;
+            calendar.innerHTML = `
+                <div class="calendar-day header">Dom</div>
+                <div class="calendar-day header">Seg</div>
+                <div class="calendar-day header">Ter</div>
+                <div class="calendar-day header">Qua</div>
+                <div class="calendar-day header">Qui</div>
+                <div class="calendar-day header">Sex</div>
+                <div class="calendar-day header">Sáb</div>
+            `;
+
+            for (let i = 0; i < startDay; i++) {
+                calendar.innerHTML += `<div class="calendar-day"></div>`;
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const events = clients.filter(client => client.maintenance_date === dateStr);
+                const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
+                const hasEvent = events.length > 0;
+                let eventHTML = '';
+                for (const client of events) {
+                    eventHTML += `<div class="calendar-event">${client.name}</div>`;
+                }
+                calendar.innerHTML += `
+                    <div class="calendar-day ${isToday ? 'today' : ''} ${hasEvent ? 'has-event' : ''}" ${hasEvent ? `onclick="showDayEvents('${dateStr}')"` : ''}>
+                        <span>${day}</span>
+                        ${eventHTML}
+                    </div>
+                `;
+            }
+        }
+
+        async function editClient(id) {
+            const clients = await getClients();
+            const client = clients.find(c => c.id === id);
+            if (!client) {
+                alert('Cliente não encontrado.');
+                return;
+            }
+            const modal = document.getElementById('cadastroModal');
+            const modalTitle = document.getElementById('cadastroModalLabel');
+            modalTitle.textContent = 'Editar Cliente';
+            document.getElementById('editId').value = id;
+            document.getElementById('name').value = client.name;
+            document.getElementById('whatsapp').value = client.whatsapp;
+            document.getElementById('application_date').value = client.application_date;
+            document.getElementById('application_time').value = client.application_time;
+            document.getElementById('maintenance_date').value = client.maintenance_date;
+            document.getElementById('maintenance_time').value = client.maintenance_time;
+            document.getElementById('application_value').value = client.application_value;
+            document.getElementById('maintenance_value').value = client.maintenance_value;
+            document.getElementById('eyelash_model').value = client.eyelash_model;
+            bootstrap.Modal.getOrCreateInstance(modal).show();
             bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
-            alert('Cliente excluído com sucesso!');
         }
-    }
 
-    async function openNewMaintenance(index) {
-        const modal = document.getElementById('newMaintenanceModal');
-        document.getElementById('maintenanceIndex').value = index;
-        document.getElementById('new_maintenance_date').value = '';
-        document.getElementById('new_maintenance_time').value = '';
-        document.getElementById('new_maintenance_value').value = '';
-        document.getElementById('new_eyelash_model').value = '';
-        bootstrap.Modal.getOrCreateInstance(modal).show();
-    }
-
-    function searchClients() {
-        const searchInput = document.getElementById('searchInput').value;
-        updateClientsTable(searchInput);
-    }
-
-    document.getElementById('cadastroForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const client = {};
-        for (let [key, value] of formData.entries()) {
-            client[key] = value;
+        async function deleteClient(id) {
+            if (confirm('Deseja realmente excluir este cliente?')) {
+                const success = await deleteClient(id);
+                if (success) {
+                    await updateClientsTable(document.getElementById('searchInput').value);
+                    await updateCalendar();
+                    bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
+                    alert('Cliente excluído com sucesso!');
+                }
+            }
         }
-        if (!validateForm(client)) return;
-        const clients = await getClients();
-        const editIndex = parseInt(client.editIndex);
-        if (!isNaN(editIndex)) {
-            clients[editIndex] = client;
-        } else {
-            clients.push(client);
+
+        async function openNewMaintenance(id) {
+            const modal = document.getElementById('newMaintenanceModal');
+            document.getElementById('maintenanceId').value = id;
+            document.getElementById('new_maintenance_date').value = '';
+            document.getElementById('new_maintenance_time').value = '';
+            document.getElementById('new_maintenance_value').value = '';
+            document.getElementById('new_eyelash_model').value = '';
+            bootstrap.Modal.getOrCreateInstance(modal).show();
         }
-        await saveClients(clients);
-        await updateClientsTable(document.getElementById('searchInput').value);
-        await updateAgenda();
-        this.reset();
-        document.getElementById('editIndex').value = '';
-        document.getElementById('cadastroModalLabel').textContent = 'Cadastrar Cliente';
-        bootstrap.Modal.getInstance(document.getElementById('cadastroModal')).hide();
-        alert(!isNaN(editIndex) ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!');
-    });
 
-    document.getElementById('newMaintenanceForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const maintenance = {};
-        for (let [key, value] of formData.entries()) {
-            maintenance[key] = value;
+        function searchClients() {
+            const searchInput = document.getElementById('searchInput').value;
+            updateClientsTable(searchInput);
         }
-        if (!validateMaintenanceForm(maintenance)) return;
-        const clients = await getClients();
-        const index = parseInt(maintenance.maintenanceIndex);
-        clients[index].maintenance_date = maintenance.new_maintenance_date;
-        clients[index].maintenance_time = maintenance.new_maintenance_time;
-        clients[index].maintenance_value = maintenance.new_maintenance_value;
-        clients[index].eyelash_model = maintenance.new_eyelash_model;
-        await saveClients(clients);
-        await updateClientsTable(document.getElementById('searchInput').value);
-        await updateAgenda();
-        this.reset();
-        bootstrap.Modal.getInstance(document.getElementById('newMaintenanceModal')).hide();
-        alert('Nova manutenção agendada com sucesso!');
-    });
 
-    document.getElementById('applicationMessageForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const template = formData.get('applicationMessageTemplate');
-        saveApplicationMessageTemplate(template);
-        alert('Modelo de mensagem de aplicação salvo com sucesso!');
-    });
+        document.getElementById('cadastroForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const client = {};
+            for (let [key, value] of formData.entries()) {
+                client[key] = value;
+            }
+            if (!validateForm(client)) return;
+            const isEdit = !!client.editId;
+            if (isEdit) client.id = client.editId;
+            delete client.editId;
+            const savedClient = await saveClients(client, isEdit);
+            if (savedClient) {
+                await updateClientsTable(document.getElementById('searchInput').value);
+                await updateCalendar();
+                this.reset();
+                document.getElementById('editId').value = '';
+                document.getElementById('cadastroModalLabel').textContent = 'Cadastrar Cliente';
+                bootstrap.Modal.getInstance(document.getElementById('cadastroModal')).hide();
+                alert(isEdit ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!');
+            }
+        });
 
-    document.getElementById('maintenanceMessageForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const template = formData.get('maintenanceMessageTemplate');
-        saveMaintenanceMessageTemplate(template);
-        alert('Modelo de mensagem de manutenção salvo com sucesso!');
-    });
+        document.getElementById('newMaintenanceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const maintenance = {};
+            for (let [key, value] of formData.entries()) {
+                maintenance[key] = value;
+            }
+            if (!validateMaintenanceForm(maintenance)) return;
+            const clients = await getClients();
+            const client = clients.find(c => c.id === maintenance.maintenanceId);
+            if (!client) {
+                alert('Cliente não encontrado.');
+                return;
+            }
+            client.maintenance_date = maintenance.new_maintenance_date;
+            client.maintenance_time = maintenance.new_maintenance_time;
+            client.maintenance_value = maintenance.new_maintenance_value;
+            client.eyelash_model = maintenance.new_eyelash_model;
+            const savedClient = await saveClients(client, true);
+            if (savedClient) {
+                await updateClientsTable(document.getElementById('searchInput').value);
+                await updateCalendar();
+                this.reset();
+                bootstrap.Modal.getInstance(document.getElementById('newMaintenanceModal')).hide();
+                alert('Nova manutenção agendada com sucesso!');
+            }
+        });
 
-    document.getElementById('searchInput').addEventListener('input', searchClients);
+        document.getElementById('applicationMessageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const template = formData.get('applicationMessageTemplate');
+            saveApplicationMessageTemplate(template);
+            alert('Modelo de mensagem de aplicação salvo com sucesso!');
+        });
 
-    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        document.getElementById('maintenanceMessageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const template = formData.get('maintenanceMessageTemplate');
+            saveMaintenanceMessageTemplate(template);
+            alert('Modelo de mensagem de manutenção salvo com sucesso!');
+        });
 
-    document.addEventListener('DOMContentLoaded', async function() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            document.getElementById('themeToggle').classList.remove('fa-sun');
-            document.getElementById('themeToggle').classList.add('fa-moon');
-        }
-        await updateClientsTable();
-        await updateAgenda();
-        document.getElementById('applicationMessageTemplate').value = getApplicationMessageTemplate();
-        document.getElementById('maintenanceMessageTemplate').value = getMaintenanceMessageTemplate();
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-        AOS.init({ duration: 800, once: true });
-    });
-</script>
+        document.getElementById('searchInput').addEventListener('input', searchClients);
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        document.getElementById('prevMonth').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendar();
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendar();
+        });
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('themeToggle').classList.remove('bi-sun-fill');
+                document.getElementById('themeToggle').classList.add('bi-moon-stars-fill');
+            }
+            await updateClientsTable();
+            await updateCalendar();
+            document.getElementById('applicationMessageTemplate').value = getApplicationMessageTemplate();
+            document.getElementById('maintenanceMessageTemplate').value = getMaintenanceMessageTemplate();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            AOS.init({ duration: 800, once: true });
+        });
+    </script>
 </body>
 </html>

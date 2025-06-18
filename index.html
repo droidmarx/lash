@@ -298,26 +298,36 @@
             box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
         }
         .calendar-day.today {
-            border: 3px solid var(--primary-light);
+            background: var(--primary-light);
+            color: #FFFFFF;
             border-radius: 8px;
-            box-shadow: inset 0 0 0 2px rgba(251, 191, 36, 0.1);
         }
         .dark-theme .calendar-day.today {
-            border-color: var(--primary-dark);
-            box-shadow: inset 0 0 0 2px rgba(217, 119, 6, 0.1);
-        }
-        .calendar-event {
-            background: linear-gradient(45deg, var(--primary-light), #EC4899);
+            background: var(--primary-dark);
             color: #FFFFFF;
-            padding: 0.2rem 0.5rem;
-            margin: 2px 0;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            overflow: hidden;
         }
-        .dark-theme .calendar-event {
-            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
+        .event-count {
+            background: var(--secondary-dark);
+            color: #FFFFFF;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin: 4px auto;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .event-count {
+            background: var(--secondary-light);
+        }
+        .event-count:hover {
+            transform: scale(1.2);
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.5);
+        }
+        .dark-theme .event-count:hover {
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.5);
         }
         .day-events-list li {
             display: flex;
@@ -441,7 +451,10 @@
             transform: scaleX(1);
         }
         .table td {
+            height: 40px;
+            font-size: .6em;
             transition: background 0.3s ease, transform 0.3s ease;
+            padding: 20px;
         }
         .table td:hover {
             background: rgba(251, 191, 36, 0.1);
@@ -478,8 +491,9 @@
             to { background-color: rgba(55, 65, 81, 0.5); }
         }
         #searchInput {
-            border-radius: 12px;
-            max-width: 300px;
+            border-radius: 0 12 0 12;
+            max-width: fit-content;
+            border: solid 1.5px var(--secondary-light);
         }
         #searchInput:focus + .input-group-text .bi-search {
             animation: heartbeat 1s infinite;
@@ -559,9 +573,10 @@
                 min-height: 60px;
                 padding: 0.3rem;
             }
-            .calendar-event {
-                font-size: 0.7rem;
-                padding: 0.1rem 0.3rem;
+            .event-count {
+                width: 16px;
+                height: 16px;
+                font-size: 0.6rem;
             }
             .day-events-list li {
                 font-size: 0.9rem;
@@ -618,9 +633,9 @@
         <div id="clients-list" class="card" data-aos="fade-up">
             <h2><i class="bi bi-people-fill"></i> Clientes Cadastrados</h2>
             <div class="mb-3">
-                <div class="input-group" style="max-width: 300px;">
+                <div class="input-group" style="max-width: 600px;">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" id="searchInput" placeholder="Pesquisar por nome, WhatsApp ou data..." aria-label="Pesquisar clientes">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Pesquisar..." aria-label="Pesquisar clientes">
                 </div>
             </div>
             <div class="table-responsive">
@@ -685,7 +700,7 @@
                             <label for="appointment_time" class="form-label" id="appointment_time_label">Horário:</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="appointment_time" name="appointment_time" min="08:00" max="18:00" required aria-label="Horário do agendamento">
+                                <input type="time" class="form-control" id="appointment_time" name="appointment_time" min="00:00" max="00:00" required aria-label="Horário do agendamento">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -796,7 +811,7 @@
                             <label for="new_maintenance_time" class="form-label">Horário da Manutenção:</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="new_maintenance_time" name="new_maintenance_time" min="08:00" max="18:00" required aria-label="Novo horário da manutenção">
+                                <input type="time" class="form-control" id="new_maintenance_time" name="new_maintenance_time" min="00:00" max="00:00" required aria-label="Novo horário da manutenção">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -968,14 +983,17 @@
         }
 
         async function deleteClient(id) {
+            if (!confirm('Deseja realmente excluir este cliente?')) return;
             try {
                 const response = await fetch(`${API_CLIENTS}/${id}`, { method: 'DELETE' });
                 if (!response.ok) throw new Error('Erro ao excluir cliente');
-                return true;
+                await updateClientsTable(document.getElementById('searchInput').value);
+                await updateCalendar();
+                bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
+                alert('Cliente excluído com sucesso!');
             } catch (error) {
                 console.error(error);
                 alert('Falha ao excluir cliente. Tente novamente.');
-                return false;
             }
         }
 
@@ -1038,16 +1056,16 @@
             return `https://wa.me/${client.whatsapp.replace(/\s/g, '')}?text=${encodedMessage}`;
         }
 
-        async function openWhatsAppLink(id, type) {
-            const clients = await getClients();
-            const client = clients.find(c => c.id === id);
-            if (!client) {
-                alert('Cliente não encontrado.');
-                return;
-            }
-            const link = await generateWhatsAppLink(client, type);
-            window.open(link, '_blank');
-        }
+        async function openWhatsAppLink(id) {
+    const clients = await getClients();
+    const client = clients.find(c => c.id === id);
+    if (!client) {
+        alert('Cliente não encontrado.');
+        return;
+    }
+    const link = `https://wa.me/${client.whatsapp.replace(/\s/g, '')}`;
+    window.open(link, '_blank');
+}
 
         async function showClientDetails(id) {
             const clients = await getClients();
@@ -1165,10 +1183,7 @@
                 const events = clients.filter(client => client.appointment_date === dateStr);
                 const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
                 const hasEvent = events.length > 0;
-                let eventHTML = '';
-                for (const client of events) {
-                    eventHTML += `<div class="calendar-event">${client.name}</div>`;
-                }
+                const eventHTML = hasEvent ? `<div class="event-count">${events.length}</div>` : '';
                 calendar.innerHTML += `
                     <div class="calendar-day ${isToday ? 'today' : ''} ${hasEvent ? 'has-event' : ''}" ${hasEvent ? `onclick="showDayEvents('${dateStr}')"` : ''}>
                         <span>${day}</span>
@@ -1200,18 +1215,6 @@
             updateAppointmentLabels();
             bootstrap.Modal.getOrCreateInstance(modal).show();
             bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
-        }
-
-        async function deleteClient(id) {
-            if (confirm('Deseja realmente excluir este cliente?')) {
-                const success = await deleteClient(id);
-                if (success) {
-                    await updateClientsTable(document.getElementById('searchInput').value);
-                    await updateCalendar();
-                    bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
-                    alert('Cliente excluído com sucesso!');
-                }
-            }
         }
 
         async function openNewMaintenance(id) {

@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -101,7 +102,7 @@
             border: 1px solid var(--secondary-light);
             padding: 1.5rem;
             margin-bottom: 2rem;
-            transition: transform 0.3s ease, border-color ease 0.3s;
+            transition: transform 0.3s ease, border-color 0.3s ease;
         }
         .dark-theme .card {
             background: var(--bg-dark);
@@ -327,7 +328,7 @@
             transition: background 0.3s ease;
         }
         .dark-theme .day-events-list li {
-            border-bottom-color: #rgba(217, 119, 6, 0.2);
+            border-bottom-color: rgba(217, 119, 6, 0.2);
         }
         .day-events-list li:hover {
             background: rgba(251, 191, 36, 0.1);
@@ -360,13 +361,50 @@
         .dark-theme .maint-btn { color: var(--secondary-dark); }
         .maint-btn:hover { color: #F59E0B; }
         .dark-theme .maint-btn:hover { color: #B45309; }
+        .badge-application {
+            background: var(--secondary-light);
+            color: var(--text-light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .badge-application {
+            background: var(--secondary-dark);
+            color: var(--text-dark);
+        }
+        .badge-application:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+        }
+        .dark-theme .badge-application:hover {
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+        }
+        .badge-maintenance {
+            background: var(--primary-light);
+            color: #FFFFFF;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .badge-maintenance {
+            background: var(--primary-dark);
+        }
+        .badge-maintenance:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(244, 114, 182, 0.3);
+        }
+        .dark-theme .badge-maintenance:hover {
+            box-shadow: 0 2px 8px rgba(109, 40, 217, 0.3);
+        }
         @keyframes pulse {
             0% { transform: scale(1.2); }
             50% { transform: scale(1.3); }
             100% { transform: scale(1.2); }
         }
         .input-group-text {
-            background: rgba(243, 255, 247, 0.5);
+            background: rgba(243, 231, 247, 0.5);
             border-color: var(--secondary-light);
             color: var(--secondary-light);
             border-radius: 12px 0 0 12px;
@@ -392,7 +430,7 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background-color: var(--secondary-light);
+            background: var(--secondary-light);
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
@@ -406,11 +444,11 @@
             transition: background 0.3s ease, transform 0.3s ease;
         }
         .table td:hover {
-            background: rgba(255, 191, 36, 0.1);
+            background: rgba(251, 191, 36, 0.1);
             transform: scale(1.02);
         }
         .dark-theme .table td:hover {
-            background: rgba(217, 217, 6, 0.1);
+            background: rgba(217, 119, 6, 0.1);
         }
         .whatsapp-icon {
             color: var(--whatsapp);
@@ -423,21 +461,21 @@
             transform: scale(1.2) rotate(360deg);
         }
         .search-highlight {
-            background-color: rgba(243, 255, 247, 0.5);
+            background: rgba(243, 231, 247, 0.5);
             border: 2px solid var(--secondary-light);
             animation: highlight 1s ease-out;
         }
         .dark-theme .search-highlight {
-            background: rgba(55, 65, 65, 0.5);
+            background: rgba(55, 65, 81, 0.5);
             border-color: var(--secondary-dark);
         }
         @keyframes highlight {
-            from { background: rgba(251, 255, 36, 0.3); }
-            to { background: rgba(243, 243, 247, 0.5); }
+            from { background-color: rgba(251, 191, 36, 0.3); }
+            to { background-color: rgba(243, 231, 247, 0.5); }
         }
         .dark-theme @keyframes highlight {
-            from { background: rgba(217, 217, 119, 6, 0.3); }
-            to { background: rgba(55, 65, 65, 81, 0.5); }
+            from { background-color: rgba(217, 119, 6, 0.3); }
+            to { background-color: rgba(55, 65, 81, 0.5); }
         }
         #searchInput {
             border-radius: 12px;
@@ -498,19 +536,16 @@
             border: none;
             justify-content: flex-end;
         }
-        .client-details-list {
-            li {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 0.5rem 0;
-            }
+        .client-details-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 0;
         }
-            .client-details-list li i {
-                color: var(--secondary-light);
-                font-size: 1.1rem;
-                animation: pulse 2s infinite;
-            }
+        .client-details-list li i {
+            color: var(--secondary-light);
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
         }
         .dark-theme .client-details-list li i {
             color: var(--secondary-dark);
@@ -537,6 +572,9 @@
             }
             .theme-toggle, .dropdown-toggle {
                 font-size: 1.5rem;
+            }
+            .badge-application, .badge-maintenance {
+                font-size: 0.7rem;
             }
             #currentDateTime {
                 font-size: 0.9rem;
@@ -620,37 +658,34 @@
                         <div class="mb-3">
                             <label for="whatsapp" class="form-label">WhatsApp:</label>
                             <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-chat-square-whatsapp"></i></span>
+                                <span class="input-group-text"><i class="fa-brands fa-whatsapp"></i></span>
                                 <input type="tel" class="form-control" id="whatsapp" name="whatsapp" pattern="\+55\s?\d{2}\s?\d{9}" placeholder="+55 11 91234-5678" required aria-label="WhatsApp do cliente">
                             </div>
                             <small class="form-text text-muted">Formato: +55 11 91234-5678</small>
                         </div>
                         <div class="mb-3">
-                            <label for="application_date" class="form-label">Data da Aplicação:</label>
+                            <label for="appointment_type" class="form-label">Tipo de Agendamento:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-check"></i></span>
+                                <select class="form-control" id="appointment_type" name="appointment_type" required aria-label="Tipo de agendamento">
+                                    <option value="">Selecione o tipo</option>
+                                    <option value="application">Aplicação</option>
+                                    <option value="maintenance">Manutenção</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="appointment_date" class="form-label" id="appointment_date_label">Data:</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-calendar-date-fill"></i></span>
-                                <input type="date" class="form-control" id="application_date" name="application_date" required aria-label="Data da aplicação">
+                                <input type="date" class="form-control" id="appointment_date" name="appointment_date" required aria-label="Data do agendamento">
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="application_time" class="form-label">Horário da Aplicação:</label>
+                            <label for="appointment_time" class="form-label" id="appointment_time_label">Horário:</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="application_time" name="application_time" min="08:00" max="18:00" required aria-label="Horário da aplicação">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="maintenance_date" class="form-label">Data da Manutenção:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
-                                <input type="date" class="form-control" id="maintenance_date" name="maintenance_date" required aria-label="Data da manutenção">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="maintenance_time" class="form-label">Horário da Manutenção:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="maintenance_time" name="maintenance_time" min="08:00" max="18:00" required aria-label="Horário da manutenção">
+                                <input type="time" class="form-control" id="appointment_time" name="appointment_time" min="08:00" max="18:00" required aria-label="Horário do agendamento">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -714,7 +749,7 @@
                                 <div class="mb-3">
                                     <label for="applicationMessageTemplate" class="form-label">Modelo da Mensagem de Aplicação:</label>
                                     <textarea class="form-control" id="applicationMessageTemplate" name="applicationMessageTemplate" rows="5" required aria-label="Template de mensagem de aplicação"></textarea>
-                                    <small class="form-text text-muted">Use as variáveis: {nome}, {data_aplicacao}, {hora_aplicacao}, {valor_aplicacao}, {data_manutencao}, {hora_manutencao}, {valor_manutencao}</small>
+                                    <small class="form-text text-muted">Use as variáveis: {nome}, {data_agendamento}, {hora_agendamento}, {valor_aplicacao}, {valor_manutencao}</small>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary" aria-label="Salvar template de aplicação"><i class="bi bi-save-fill"></i> Salvar</button>
@@ -726,7 +761,7 @@
                                 <div class="mb-3">
                                     <label for="maintenanceMessageTemplate" class="form-label">Modelo da Mensagem de Manutenção:</label>
                                     <textarea class="form-control" id="maintenanceMessageTemplate" name="maintenanceMessageTemplate" rows="5" required aria-label="Template de mensagem de manutenção"></textarea>
-                                    <small class="form-text text-muted">Use as variáveis: {nome}, {data_aplicacao}, {hora_aplicacao}, {valor_aplicacao}, {data_manutencao}, {hora_manutencao}, {valor_manutencao}</small>
+                                    <small class="form-text text-muted">Use as variáveis: {nome}, {data_agendamento}, {hora_agendamento}, {valor_aplicacao}, {valor_manutencao}</small>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary" aria-label="Salvar template de manutenção"><i class="bi bi-save-fill"></i> Salvar</button>
@@ -845,9 +880,9 @@
             fox: 'Fox'
         };
 
-        const defaultApplicationMessageTemplate = `💖 *Lembrete de agendamento*\n\nOlá {nome}, tudo bem?\n\n✨ Sua aplicação de cílios está agendada para *{data_aplicacao}*.\n\nConfira os detalhes abaixo:\n\n⏰ Horário: {hora_aplicacao}\n💸 Valor: {valor_aplicacao}\n\n📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.\n\n📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.\n\nEm caso de dúvidas ou imprevistos, é só me chamar! 💬\nAgradeço pela confiança 💕`;
+        const defaultApplicationMessageTemplate = `💖 *Lembrete de agendamento*\n\nOlá {nome}, tudo bem?\n\n✨ Sua aplicação de cílios está agendada para *{data_agendamento}*.\n\nConfira os detalhes abaixo:\n\n⏰ Horário: {hora_agendamento}\n💸 Valor: {valor_aplicacao}\n\n📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.\n\n📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.\n\nEm caso de dúvidas ou imprevistos, é só me chamar! 💬\nAgradeço pela confiança 💕`;
 
-        const defaultMaintenanceMessageTemplate = `💖 *Lembrete de agendamento*\n\nOlá {nome}, tudo bem?\n\n✨ Sua manutenção de cílios está agendada para *{data_manutencao}*.\n\nConfira os detalhes abaixo:\n\n⏰ Horário: {hora_manutencao}\n💸 Valor: {valor_manutencao}\n\n📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.\n\n📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.\n\nEm caso de dúvidas ou imprevistos, é só me chamar! 💬\nAgradeço pela confiança 💕`;
+        const defaultMaintenanceMessageTemplate = `💖 *Lembrete de agendamento*\n\nOlá {nome}, tudo bem?\n\n✨ Sua manutenção de cílios está agendada para *{data_agendamento}*.\n\nConfira os detalhes abaixo:\n\n⏰ Horário: {hora_agendamento}\n💸 Valor: {valor_manutencao}\n\n📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.\n\n📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.\n\nEm caso de dúvidas ou imprevistos, é só me chamar! 💬\nAgradeço pela confiança 💕`;
 
         let currentDate = new Date();
 
@@ -884,6 +919,22 @@
                 themeToggle.classList.remove('bi-sun-fill');
                 themeToggle.classList.add('bi-moon-stars-fill');
                 localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function updateAppointmentLabels() {
+            const type = document.getElementById('appointment_type').value;
+            const dateLabel = document.getElementById('appointment_date_label');
+            const timeLabel = document.getElementById('appointment_time_label');
+            if (type === 'application') {
+                dateLabel.textContent = 'Data da Aplicação';
+                timeLabel.textContent = 'Horário da Aplicação';
+            } else if (type === 'maintenance') {
+                dateLabel.textContent = 'Data da Manutenção';
+                timeLabel.textContent = 'Horário da Manutenção';
+            } else {
+                dateLabel.textContent = 'Data';
+                timeLabel.textContent = 'Horário';
             }
         }
 
@@ -946,17 +997,17 @@
 
         function validateForm(client) {
             const today = new Date().toISOString().split('T')[0];
-            if (client.maintenance_date < client.application_date) {
-                alert('A data da manutenção deve ser após a data da aplicação.');
-                return false;
-            }
-            if (client.application_date < today) {
-                alert('A data da aplicação não pode ser anterior a hoje.');
+            if (client.appointment_date < today) {
+                alert('A data do agendamento não pode ser anterior a hoje.');
                 return false;
             }
             const whatsappRegex = /^\+55\s?\d{2}\s?\d{9}$/;
             if (!whatsappRegex.test(client.whatsapp)) {
                 alert('Por favor, insira um WhatsApp válido no formato +55 11 91234-5678.');
+                return false;
+            }
+            if (!client.appointment_type) {
+                alert('Por favor, selecione o tipo de agendamento.');
                 return false;
             }
             return true;
@@ -975,11 +1026,9 @@
             const template = type === 'application' ? getApplicationMessageTemplate() : getMaintenanceMessageTemplate();
             return template
                 .replace('{nome}', client.name)
-                .replace('{data_aplicacao}', formatDate(client.application_date))
-                .replace('{hora_aplicacao}', formatTime(client.application_time))
+                .replace('{data_agendamento}', formatDate(client.appointment_date))
+                .replace('{hora_agendamento}', formatTime(client.appointment_time))
                 .replace('{valor_aplicacao}', parseFloat(client.application_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
-                .replace('{data_manutencao}', formatDate(client.maintenance_date))
-                .replace('{hora_manutencao}', formatTime(client.maintenance_time))
                 .replace('{valor_manutencao}', parseFloat(client.maintenance_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
         }
 
@@ -1010,11 +1059,10 @@
             const detailsList = document.getElementById('client-details-list');
             detailsList.innerHTML = `
                 <li><i class="bi bi-person-fill"></i> <strong>Nome:</strong> ${client.name}</li>
-                <li><i class="bi bi-chat-square-whatsapp"></i> <strong>WhatsApp:</strong> ${client.whatsapp}</li>
-                <li><i class="bi bi-calendar-date-fill"></i> <strong>Data da Aplicação:</strong> ${formatDate(client.application_date)}</li>
-                <li><i class="bi bi-clock-fill"></i> <strong>Horário da Aplicação:</strong> ${formatTime(client.application_time)}</li>
-                <li><i class="bi bi-calendar-event-fill"></i> <strong>Data da Manutenção:</strong> ${formatDate(client.maintenance_date)}</li>
-                <li><i class="bi bi-clock-fill"></i> <strong>Horário da Manutenção:</strong> ${formatTime(client.maintenance_time)}</li>
+                <li><i class="fa-brands fa-whatsapp"></i> <strong>WhatsApp:</strong> ${client.whatsapp}</li>
+                <li><i class="bi bi-calendar-check"></i> <strong>Tipo de Agendamento:</strong> ${client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção'}</li>
+                <li><i class="bi bi-calendar-date-fill"></i> <strong>Data do Agendamento:</strong> ${formatDate(client.appointment_date)}</li>
+                <li><i class="bi bi-clock-fill"></i> <strong>Horário do Agendamento:</strong> ${formatTime(client.appointment_time)}</li>
                 <li><i class="bi bi-currency-exchange"></i> <strong>Valor da Aplicação:</strong> ${parseFloat(client.application_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</li>
                 <li><i class="bi bi-currency-exchange"></i> <strong>Valor da Manutenção:</strong> ${parseFloat(client.maintenance_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</li>
                 <li><i class="bi bi-eye-fill"></i> <strong>Modelo do Cílios:</strong> ${eyelashModels[client.eyelash_model] || client.eyelash_model}</li>
@@ -1028,7 +1076,7 @@
 
         async function showDayEvents(dateStr) {
             const clients = await getClients();
-            const events = clients.filter(client => client.maintenance_date === dateStr);
+            const events = clients.filter(client => client.appointment_date === dateStr);
             const modal = document.getElementById('dayEventsModal');
             const modalTitle = document.getElementById('dayEventsModalLabel');
             const eventsList = document.getElementById('day-events-list');
@@ -1036,10 +1084,12 @@
             eventsList.innerHTML = '';
             for (const client of events) {
                 const li = document.createElement('li');
+                const badgeClass = client.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
+                const badgeText = client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
                 li.innerHTML = `
-                    <span onclick="showClientDetails('${client.id}')">${client.name} - ${formatTime(client.maintenance_time)}</span>
+                    <span onclick="showClientDetails('${client.id}')">${client.name} - ${formatTime(client.appointment_time)} <span class="${badgeClass}">${badgeText}</span></span>
                     <div class="event-actions">
-                        <a href="${await generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="icon-btn whatsapp-btn"><i class="bi bi-chat-square-whatsapp"></i></a>
+                        <a href="${await generateWhatsAppLink(client, client.appointment_type)}" target="_blank" class="icon-btn whatsapp-btn"><i class="fa-brands fa-whatsapp"></i></a>
                         <span onclick="openNewMaintenance('${client.id}')" class="icon-btn ok-btn"><i class="bi bi-check-circle-fill"></i></span>
                         <a href="${await generateWhatsAppLink(client, 'application')}" target="_blank" class="icon-btn apply-btn"><i class="bi bi-calendar-check"></i></a>
                         <a href="${await generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="icon-btn maint-btn"><i class="bi bi-wrench-adjustable"></i></a>
@@ -1061,8 +1111,7 @@
                 filteredClients = filteredClients.filter(client => 
                     client.name.toLowerCase().includes(lowerSearchTerm) ||
                     client.whatsapp.toLowerCase().includes(lowerSearchTerm) ||
-                    formatDate(client.application_date).includes(lowerSearchTerm) ||
-                    formatDate(client.maintenance_date).includes(lowerSearchTerm)
+                    formatDate(client.appointment_date).includes(lowerSearchTerm)
                 );
             }
 
@@ -1071,15 +1120,14 @@
                 const isHighlighted = searchTerm && (
                     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     client.whatsapp.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    formatDate(client.application_date).includes(searchTerm.toLowerCase()) ||
-                    formatDate(client.maintenance_date).includes(searchTerm.toLowerCase())
+                    formatDate(client.appointment_date).includes(searchTerm.toLowerCase())
                 );
                 if (isHighlighted) row.classList.add('search-highlight');
                 row.setAttribute('data-aos', 'fade-up');
                 row.setAttribute('data-aos-delay', idx * 100);
                 row.innerHTML = `
                     <td onclick="showClientDetails('${client.id}')"><i class="bi bi-person-fill"></i> ${client.name}</td>
-                    <td onclick="openWhatsAppLink('${client.id}', 'application')"><i class="bi bi-chat-square-whatsapp whatsapp-icon"></i> ${client.whatsapp}</td>
+                    <td onclick="openWhatsAppLink('${client.id}', '${client.appointment_type}')"><i class="fa-brands fa-whatsapp whatsapp-icon"></i> ${client.whatsapp}</td>
                 `;
                 tbody.appendChild(row);
             });
@@ -1114,7 +1162,7 @@
 
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const events = clients.filter(client => client.maintenance_date === dateStr);
+                const events = clients.filter(client => client.appointment_date === dateStr);
                 const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
                 const hasEvent = events.length > 0;
                 let eventHTML = '';
@@ -1143,13 +1191,13 @@
             document.getElementById('editId').value = id;
             document.getElementById('name').value = client.name;
             document.getElementById('whatsapp').value = client.whatsapp;
-            document.getElementById('application_date').value = client.application_date;
-            document.getElementById('application_time').value = client.application_time;
-            document.getElementById('maintenance_date').value = client.maintenance_date;
-            document.getElementById('maintenance_time').value = client.maintenance_time;
+            document.getElementById('appointment_type').value = client.appointment_type;
+            document.getElementById('appointment_date').value = client.appointment_date;
+            document.getElementById('appointment_time').value = client.appointment_time;
             document.getElementById('application_value').value = client.application_value;
             document.getElementById('maintenance_value').value = client.maintenance_value;
             document.getElementById('eyelash_model').value = client.eyelash_model;
+            updateAppointmentLabels();
             bootstrap.Modal.getOrCreateInstance(modal).show();
             bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
         }
@@ -1199,6 +1247,7 @@
                 this.reset();
                 document.getElementById('editId').value = '';
                 document.getElementById('cadastroModalLabel').textContent = 'Cadastrar Cliente';
+                updateAppointmentLabels();
                 bootstrap.Modal.getInstance(document.getElementById('cadastroModal')).hide();
                 alert(isEdit ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!');
             }
@@ -1218,8 +1267,9 @@
                 alert('Cliente não encontrado.');
                 return;
             }
-            client.maintenance_date = maintenance.new_maintenance_date;
-            client.maintenance_time = maintenance.new_maintenance_time;
+            client.appointment_type = 'maintenance';
+            client.appointment_date = maintenance.new_maintenance_date;
+            client.appointment_time = maintenance.new_maintenance_time;
             client.maintenance_value = maintenance.new_maintenance_value;
             client.eyelash_model = maintenance.new_eyelash_model;
             const savedClient = await saveClients(client, true);
@@ -1251,6 +1301,8 @@
         document.getElementById('searchInput').addEventListener('input', searchClients);
 
         document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        document.getElementById('appointment_type').addEventListener('change', updateAppointmentLabels);
 
         document.getElementById('prevMonth').addEventListener('click', function() {
             currentDate.setMonth(currentDate.getMonth() - 1);

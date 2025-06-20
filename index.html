@@ -877,8 +877,8 @@ justify-content: space-between;
                 <div class="modal-body">
                     <ul class="client-details-list" id="client-details-list"></ul>
                     <div class="modal-footer">
-                        <a id="whatsappApplicationLink" href="#" target="_blank" class="btn btn-primary" aria-label="Enviar mensagem de aplicação"><i class="bi bi-calendar-check"></i> Aplicação</a>
-                        <a id="whatsappMaintenanceLink" href="#" target="_blank" class="btn btn-primary" aria-label="Enviar mensagem de manutenção"><i class="bi bi-wrench-adjustable"></i> Manutenção</a>
+                        <a id="whatsappApplicationLink" href="#" target="_blank" class="btn btn-primary" aria-label="Enviar mensagem de aplicação"><i class="bi bi-person-heart"></i> Aplicação</a>
+                        <a id="whatsappMaintenanceLink" href="#" target="_blank" class="btn btn-primary" aria-label="Enviar mensagem de manutenção"><i class="bi bi-person-gear"></i> Manutenção</a>
                         <button id="editClientButton" class="btn btn-primary" aria-label="Editar cliente"><i class="bi bi-pencil-square"></i> Editar</button>
                         <button id="deleteClientButton" class="btn btn-danger" aria-label="Excluir cliente"><i class="bi bi-trash-fill"></i> Excluir</button>
                     </div>
@@ -1128,8 +1128,8 @@ justify-content: space-between;
                 const badgeClass = client.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
                 const badgeText = client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
                 const actionIcon = client.appointment_type === 'application' 
-                    ? `<a href="${await generateWhatsAppLink(client, 'application')}" target="_blank" class="icon-btn apply-btn"><i class="bi bi-calendar-check"></i></a>`
-                    : `<a href="${await generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="icon-btn maint-btn"><i class="bi bi-wrench-adjustable"></i></a>`;
+                    ? `<a href="${await generateWhatsAppLink(client, 'application')}" target="_blank" class="icon-btn apply-btn"><i class="bi bi-person-heart"></i></a>`
+                    : `<a href="${await generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="icon-btn maint-btn"><i class="bi bi-person-gear"></i></a>`;
                 li.innerHTML = `
                     <span onclick="showClientDetails('${client.id}')">${client.name} - ${formatTime(client.appointment_time)} <span class="${badgeClass}">${badgeText}</span></span>
                     <div class="event-actions">

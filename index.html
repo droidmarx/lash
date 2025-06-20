@@ -46,10 +46,10 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(1px);
         }
         .dark-theme .navbar {
-            background: rgba(17, 24, 39, 0.9);
+            background: rgba(17, 24, 39, 0.57);
         }
         .navbar-brand {
             font-size: 1.8rem;
@@ -89,7 +89,7 @@
             color: var(--secondary-dark);
         }
         h2 {
-            font-size: 1.6rem;
+            font-size: 1.2rem;
             font-weight: 500;
             color: var(--primary-light);
         }
@@ -124,7 +124,7 @@
             box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
         }
         .dark-theme .form-control:focus {
-            border-color: var(--secondary-dark);
+            border-color:  var(--secondary-dark);
             box-shadow: 0 0 8px rgba(217, 119, 6, 0.5);
         }
         .btn-primary {
@@ -269,6 +269,9 @@
             min-height: 60px;
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+         .dark-theme span{
+            color: var(--text-dark);
         }
         .calendar-day.header {
             font-weight: 500;
@@ -451,10 +454,7 @@
             transform: scaleX(1);
         }
         .table td {
-            height: 15px;
-            font-size: .6em;
             transition: background 0.3s ease, transform 0.3s ease;
-            vertical-align: bottom;
         }
         .table td:hover {
             background: rgba(251, 191, 36, 0.1);
@@ -490,11 +490,11 @@
             from { background-color: rgba(217, 119, 6, 0.3); }
             to { background-color: rgba(55, 65, 81, 0.5); }
         }
-        #searchInput {
-            border-radius: 0 12 0 12;
-            max-width: fit-content;
-            border: solid 1.5px var(--secondary-light);
-        }
+         #searchInput {
+     border-radius: 0 12 0 12;
+     max-width: fit-content;
+     border: solid 1.5px var(--secondary-light);
+ }
         #searchInput:focus + .input-group-text .bi-search {
             animation: heartbeat 1s infinite;
             color: var(--secondary-light);
@@ -546,7 +546,7 @@
         .dark-theme .modal-header {
             background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
         }
-        .modal-footer {
+                .modal-footer {
             display: grid;
 grid-template-columns: 1fr 1fr;
 gap: 10px;
@@ -558,7 +558,11 @@ justify-content: space-between;
       width: 100%;
       height: 80px;
   }
-        
+        .modal-footer a{
+            width: 100%;
+            height: 80px;
+            padding: 14px;
+        }
         
         .client-details-list li {
             display: flex;
@@ -567,13 +571,11 @@ justify-content: space-between;
             padding: 0.5rem 0;
             font-size: 0.7rem;
         }
-        .client-details-list li i {
-            color: var(--secondary-light);
-            font-size: 1.1rem;
-            animation: pulse 2s infinite;
-        }
         .dark-theme .client-details-list li i {
             color: var(--secondary-dark);
+        }
+        #newMaintenanceModal, #clientDetailsModal, #cadastroModal {
+            z-index: 3051;
         }
         @media (max-width: 768px) {
             .container-main {
@@ -605,21 +607,22 @@ justify-content: space-between;
             #currentDateTime {
                 font-size: 0.9rem;
             }
+            .modal-footer {
+                grid-template-columns: 1fr 1fr;
+            }
+            .modal-footer button, .modal-footer a {
+                height: 60px;
+                font-size:0.7rem;
+            }
         }
         
-        small{
-            background: #fff;
-        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Gerenciamento de Cílios</a>
-            <div class="d-flex align-items-center gap-2">
-                <span id="currentDateTime"></span>
-                <i id="themeToggle" class="bi bi-sun-fill theme-toggle" aria-label="Alternar tema"></i>
-                <div class="dropdown">
+            <div class="d-flex align-items-center gap-5"><div class="dropdown">
                     <button class="dropdown-toggle" type="button" id="actionMenu" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-list"></i>
                     </button>
@@ -628,13 +631,16 @@ justify-content: space-between;
                         <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#messageConfigModal">Configurar Mensagens</a></li>
                     </ul>
                 </div>
+                <span id="currentDateTime"></span>
+                <i id="themeToggle" class="bi bi-sun-fill theme-toggle" aria-label="Alternar tema"></i>
+                
             </div>
         </div>
     </nav>
     <div class="container-main">
         <div id="agenda" class="card" data-aos="fade-up">
             <div class="card-body">
-                <h2><i class="bi bi-calendar-week-fill"></i> Agenda de Manutenções</h2>
+                <h2><i class="bi bi-calendar-week-fill"></i> Agenda</h2>
                 <div class="calendar-header">
                     <h3 id="calendarTitle"></h3>
                     <div class="calendar-nav">
@@ -715,7 +721,7 @@ justify-content: space-between;
                             <label for="appointment_time" class="form-label" id="appointment_time_label">Horário:</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="appointment_time" name="appointment_time"  required aria-label="Horário do agendamento">
+                                <input type="time" class="form-control" id="appointment_time" name="appointment_time" min="08:00" max="18:00" required aria-label="Horário do agendamento">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -826,7 +832,7 @@ justify-content: space-between;
                             <label for="new_maintenance_time" class="form-label">Horário da Manutenção:</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="new_maintenance_time" name="new_maintenance_time" required aria-label="Novo horário da manutenção">
+                                <input type="time" class="form-control" id="new_maintenance_time" name="new_maintenance_time" min="08:00" max="18:00" required aria-label="Novo horário da manutenção">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -917,11 +923,13 @@ justify-content: space-between;
         let currentDate = new Date();
 
         function formatDate(dateStr) {
+            if (!dateStr) return '';
             const [year, month, day] = dateStr.split('-');
             return `${day}/${month}/${year}`;
         }
 
         function formatTime(timeStr) {
+            if (!timeStr) return '';
             const [hours, minutes] = timeStr.split(':');
             return `${hours}:${minutes}`;
         }
@@ -1058,11 +1066,11 @@ justify-content: space-between;
         async function generateWhatsAppMessage(client, type) {
             const template = type === 'application' ? getApplicationMessageTemplate() : getMaintenanceMessageTemplate();
             return template
-                .replace('{nome}', client.name)
-                .replace('{data_agendamento}', formatDate(client.appointment_date))
-                .replace('{hora_agendamento}', formatTime(client.appointment_time))
-                .replace('{valor_aplicacao}', parseFloat(client.application_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
-                .replace('{valor_manutencao}', parseFloat(client.maintenance_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+                .replace(/{nome}/g, client.name || '')
+                .replace(/{data_agendamento}/g, formatDate(client.appointment_date))
+                .replace(/{hora_agendamento}/g, formatTime(client.appointment_time))
+                .replace(/{valor_aplicacao}/g, parseFloat(client.application_value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
+                .replace(/{valor_manutencao}/g, parseFloat(client.maintenance_value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
         }
 
         async function generateWhatsAppLink(client, type) {
@@ -1072,15 +1080,15 @@ justify-content: space-between;
         }
 
         async function openWhatsAppLink(id) {
-    const clients = await getClients();
-    const client = clients.find(c => c.id === id);
-    if (!client) {
-        alert('Cliente não encontrado.');
-        return;
-    }
-    const link = `https://wa.me/${client.whatsapp.replace(/\s/g, '')}`;
-    window.open(link, '_blank');
-}
+            const clients = await getClients();
+            const client = clients.find(c => c.id === id);
+            if (!client) {
+                alert('Cliente não encontrado.');
+                return;
+            }
+            const link = `https://wa.me/${client.whatsapp.replace(/\s/g, '')}`;
+            window.open(link, '_blank');
+        }
 
         async function showClientDetails(id) {
             const clients = await getClients();
@@ -1119,13 +1127,14 @@ justify-content: space-between;
                 const li = document.createElement('li');
                 const badgeClass = client.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
                 const badgeText = client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
+                const actionIcon = client.appointment_type === 'application' 
+                    ? `<a href="${await generateWhatsAppLink(client, 'application')}" target="_blank" class="icon-btn apply-btn"><i class="bi bi-calendar-check"></i></a>`
+                    : `<a href="${await generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="icon-btn maint-btn"><i class="bi bi-wrench-adjustable"></i></a>`;
                 li.innerHTML = `
                     <span onclick="showClientDetails('${client.id}')">${client.name} - ${formatTime(client.appointment_time)} <span class="${badgeClass}">${badgeText}</span></span>
                     <div class="event-actions">
-                        <a href="${await generateWhatsAppLink(client, client.appointment_type)}" target="_blank" class="icon-btn whatsapp-btn"><i class="fa-brands fa-whatsapp"></i></a>
-                        <span onclick="openNewMaintenance('${client.id}')" class="icon-btn ok-btn"><i class="bi bi-check-circle-fill"></i></span>
-                        <a href="${await generateWhatsAppLink(client, 'application')}" target="_blank" class="icon-btn apply-btn"><i class="bi bi-calendar-check"></i></a>
-                        <a href="${await generateWhatsAppLink(client, 'maintenance')}" target="_blank" class="icon-btn maint-btn"><i class="bi bi-wrench-adjustable"></i></a>
+                        ${actionIcon}
+                        <span onclick="openNewMaintenance('${client.id}')" class="icon-btn ok-btn"><i class="bi bi bi-card-checklist"></i></span>
                     </div>
                 `;
                 eventsList.appendChild(li);
@@ -1160,7 +1169,7 @@ justify-content: space-between;
                 row.setAttribute('data-aos-delay', idx * 100);
                 row.innerHTML = `
                     <td onclick="showClientDetails('${client.id}')"><i class="bi bi-person-fill"></i> ${client.name}</td>
-                    <td onclick="openWhatsAppLink('${client.id}', '${client.appointment_type}')"><i class="fa-brands fa-whatsapp whatsapp-icon"></i> ${client.whatsapp}</td>
+                    <td onclick="openWhatsAppLink('${client.id}')"><i class="fa-brands fa-whatsapp whatsapp-icon"></i> ${client.whatsapp}</td>
                 `;
                 tbody.appendChild(row);
             });

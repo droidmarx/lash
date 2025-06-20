@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda de Cílios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-light: #F472B6;
+            --secondary-light: #FBBF24;
+            --bg-light: #FFFFFF;
+            --text-light: #1F2937;
+            --whatsapp: #4CAF50;
+            --whatsapp-hover: #2E7D32;
+            --primary-dark: #6D28D9;
+            --secondary-dark: #D97706;
+            --bg-dark: #111827;
+            --text-dark: #F9FAFB;
+        }
+        body {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light), var(--bg-light), var(--primary-light));
+            background-size: 400% 400%;
+            animation: gradientAnimation 12s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        body.dark-theme {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark), var(--bg-dark), var(--primary-dark));
+            color: var(--text-dark);
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+        .dark-theme .navbar {
+            background: rgba(17, 24, 39, 0.9);
+        }
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-light);
+        }
+        .dark-theme .navbar-brand {
+            color: var(--primary-dark);
+        }
+        .container-main {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(244, 114, 182, 0.4);
+            margin: 2rem auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark-theme .container-main {
+            background: var(--bg-dark);
+            box-shadow: 0 8px 24px rgba(109, 40, 217, 0.4);
+        }
+        .container-main:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(244, 114, 182, 0.5);
+        }
+        .dark-theme .container-main:hover {
+            box-shadow: 0 12px 32px rgba(109, 40, 217, 0.5);
+        }
+        h2 {
+            font-size: 1.rem;
+            font-weight: 500;
+            color: var(--primary-light);
+        }
+        .dark-theme h2 {
+            color: var(--primary-dark);
+        }
+       .dark-theme #calendarTitle {
+           color: var(--text-dark);
+       }
+        .card {
+            background: var(--bg-light);
+            border-radius: 24px;
+            border: 1px solid var(--secondary-light);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .dark-theme .card {
+            background: var(--bg-dark);
+            border-color: var(--secondary-dark);
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-light);
+        }
+        .dark-theme .card:hover {
+            border-color: var(--primary-dark);
+        }
+        #calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 1rem;
+        }
+        .dark-theme #calendar {
+            background: var(--bg-dark);
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .calendar-header h3 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--primary-light);
+        }
+        .dark-theme .calendar-header h3 {
+            color: var(--primary-dark);
+        }
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .calendar-nav i {
+            cursor: pointer;
+            color: var(--secondary-light);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .calendar-nav i {
+            color: var(--secondary-dark);
+        }
+        .calendar-nav i:hover {
+            transform: scale(1.2);
+        }
+        .calendar-day {
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            min-height: 60px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .calendar-day.header {
+            font-weight: 500;
+            color: var(--primary-light);
+        }
+        .dark-theme .calendar-day.header {
+            color: var(--primary-dark);
+        }
+        .calendar-day.has-event {
+            background: var(--secondary-light);
+            color: var(--text-light);
+            border: 2px solid var(--primary-light);
+            border-radius: 8px;
+            opacity: 0.9;
+            cursor: pointer;
+        }
+        .dark-theme .calendar-day.has-event {
+            background: var(--secondary-dark);
+            border-color: var(--primary-dark);
+            color: var(--text-dark);
+        }
+        .calendar-day.has-event:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+        }
+        .dark-theme .calendar-day.has-event:hover {
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
+        }
+        .calendar-day.today {
+            background: var(--primary-light);
+            color: #FFFFFF;
+            border-radius: 8px;
+        }
+        .dark-theme .calendar-day.today {
+            background: var(--primary-dark);
+            color: #FFFFFF;
+        }
+        .event-count {
+            background: var(--secondary-dark);
+            color: #FFFFFF;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin: 4px auto;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .event-count {
+            background: var(--secondary-light);
+        }
+        .event-count:hover {
+            transform: scale(1.2);
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.5);
+        }
+        .dark-theme .event-count:hover {
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.5);
+        }
+        .day-events-list li, .appointments-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            transition: background 0.3s ease;
+        }
+        .dark-theme .day-events-list li, .dark-theme .appointments-list li {
+            border-bottom-color: rgba(217, 119, 6, 0.2);
+        }
+        .day-events-list li:hover, .appointments-list li:hover {
+            background: rgba(251, 191, 36, 0.1);
+        }
+        .dark-theme .day-events-list li:hover, .dark-theme .appointments-list li:hover {
+            background: rgba(217, 119, 6, 0.1);
+        }
+        .badge-application {
+            background: var(--secondary-light);
+            color: var(--text-light);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .badge-application {
+            background: var(--secondary-dark);
+            color: var(--text-dark);
+        }
+        .badge-application:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+        }
+        .dark-theme .badge-application:hover {
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+        }
+        .badge-maintenance {
+            background: var(--primary-light);
+            color: #FFFFFF;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .badge-maintenance {
+            background: var(--primary-dark);
+        }
+        .badge-maintenance:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(244, 114, 182, 0.3);
+        }
+        .dark-theme .badge-maintenance:hover {
+            box-shadow: 0 2px 8px rgba(109, 40, 217, 0.3);
+        }
+        .theme-toggle {
+            color: var(--secondary-light);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .dark-theme .theme-toggle {
+            color: var(--secondary-dark);
+        }
+        .theme-toggle:hover {
+            transform: rotate(360deg);
+        }
+        .modal-content {
+            border-radius: 24px;
+            background: var(--bg-light);
+            box-shadow: 0 8px 24px rgba(244, 114, 182, 0.4);
+        }
+        .dark-theme .modal-content {
+            background: var(--bg-dark);
+            box-shadow: 0 8px 24px rgba(109, 40, 217, 0.4);
+        }
+        .modal-header {
+            background: linear-gradient(45deg, var(--primary-light), #EC4899);
+            color: #FFFFFF;
+            border-radius: 24px 24px 0 0;
+        }
+        .dark-theme .modal-header {
+            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
+        }
+        .modal-footer {
+            border: none;
+        }
+        @media (max-width: 768px) {
+            .container-main {
+                padding: 1rem;
+            }
+            .calendar-day {
+                font-size: 0.7rem;
+                min-height: 60px;
+                padding: 0.3rem;
+            }
+            .event-count {
+                width: 16px;
+                height: 16px;
+                font-size: 0.6rem;
+            }
+            .day-events-list li, .appointments-list li {
+                font-size: 0.9rem;
+                padding: 0.5rem 0;
+            }
+            .navbar-brand {
+                font-size: 1.6rem;
+            }
+            .theme-toggle {
+                font-size: 1.5rem;
+            }
+            .badge-application, .badge-maintenance {
+                font-size: 0.7rem;
+            }
+        }
+                 .dark-theme span{
+            color: var(--text-dark);
+        }
+        
+h3 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 48px;
+      color: #d63384;
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.6), 0 0 20px rgba(255, 105, 180, 0.4);
+      animation: glow 2s ease-in-out infinite alternate;
+      text-align: center;
+      margin: 20px;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #d63384, 0 0 20px #d63384, 0 0 30px #e83e8c;
+      }
+      to {
+        text-shadow: 0 0 20px #f783ac, 0 0 30px #f783ac, 0 0 40px #f783ac;
+      }
+    }        
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="https://www.instagram.com/ilashbr?igsh=NjhleG1ndmd1emFn"><h3>I Lash</h3></a>
+            <div class="d-flex align-items-center">
+                <i id="themeToggle" class="bi bi-sun-fill theme-toggle" aria-label="Alternar tema"></i>
+            </div>
+        </div>
+    </nav>
+    <div class="container-main">
+        <div id="agenda" class="card" data-aos="fade-up">
+            <div class="card-body">
+                <h2><i class="bi bi-calendar-week-fill"></i> Agendamentos</h2>
+                <div class="calendar-header">
+                    <h4 id="calendarTitle"></h4>
+                    <div class="calendar-nav">
+                        <i class="bi bi-chevron-left" id="prevMonth"></i>
+                        <i class="bi bi-chevron-right" id="nextMonth"></i>
+                    </div>
+                </div>
+                <div id="calendar"></div>
+            </div>
+        </div>
+        <div id="appointments-list" class="card" data-aos="fade-up">
+            <div class="card-body">
+                <h2><i class="bi bi-list-check"></i> Lista de Agendamentos</h2>
+                <ul class="appointments-list" id="appointments-list-body"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Eventos do Dia -->
+    <div class="modal fade" id="dayEventsModal" tabindex="-1" aria-labelledby="dayEventsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dayEventsModalLabel">Eventos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="day-events-list" id="day-events-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        const API_CLIENTS = 'https://683d14e6199a0039e9e427bd.mockapi.io/Dados';
+        let currentDate = new Date();
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const [year, month, day] = dateStr.split('-');
+            return `${day}/${month}/${year}`;
+        }
+
+        function formatTime(timeStr) {
+            if (!timeStr) return '';
+            const [hours, minutes] = timeStr.split(':');
+            return `${hours}:${minutes}`;
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                themeToggle.classList.remove('bi-moon-stars-fill');
+                themeToggle.classList.add('bi-sun-fill');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-theme');
+                themeToggle.classList.remove('bi-sun-fill');
+                themeToggle.classList.add('bi-moon-stars-fill');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        async function getClients() {
+            try {
+                const response = await fetch(API_CLIENTS);
+                if (!response.ok) throw new Error('Erro ao buscar agendamentos');
+                return await response.json();
+            } catch (error) {
+                console.error(error);
+                alert('Falha ao carregar agendamentos. Tente novamente.');
+                return [];
+            }
+        }
+
+        async function showDayEvents(dateStr) {
+            const clients = await getClients();
+            const events = clients.filter(client => client.appointment_date === dateStr);
+            const modal = document.getElementById('dayEventsModal');
+            const modalTitle = document.getElementById('dayEventsModalLabel');
+            const eventsList = document.getElementById('day-events-list');
+            modalTitle.textContent = `Eventos em ${formatDate(dateStr)}`;
+            eventsList.innerHTML = '';
+            for (const client of events) {
+                const li = document.createElement('li');
+                const badgeClass = client.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
+                const badgeText = client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
+                li.innerHTML = `
+                    <span>${client.name} - ${formatTime(client.appointment_time)} <span class="${badgeClass}">${badgeText}</span></span>
+                `;
+                eventsList.appendChild(li);
+            }
+            bootstrap.Modal.getOrCreateInstance(modal).show();
+        }
+
+        async function updateAppointmentsList() {
+            const clients = await getClients();
+            const listBody = document.getElementById('appointments-list-body');
+            listBody.innerHTML = '';
+            const sortedClients = clients.sort((a, b) => {
+                const dateA = new Date(`${a.appointment_date}T${a.appointment_time}`);
+                const dateB = new Date(`${b.appointment_date}T${b.appointment_time}`);
+                return dateA - dateB;
+            });
+            sortedClients.forEach((client, idx) => {
+                const li = document.createElement('li');
+                li.setAttribute('data-aos', 'fade-up');
+                li.setAttribute('data-aos-delay', idx * 100);
+                const badgeClass = client.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
+                const badgeText = client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
+                li.innerHTML = `
+                    <span>${client.name} - ${formatDate(client.appointment_date)} às ${formatTime(client.appointment_time)} <span class="${badgeClass}">${badgeText}</span></span>
+                `;
+                listBody.appendChild(li);
+            });
+        }
+
+        async function updateCalendar() {
+            const clients = await getClients();
+            const calendar = document.getElementById('calendar');
+            const calendarTitle = document.getElementById('calendarTitle');
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const today = new Date();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDay = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+
+            calendarTitle.textContent = `${firstDay.toLocaleString('pt-BR', { month: 'long' })} ${year}`;
+            calendar.innerHTML = `
+                <div class="calendar-day header">Dom</div>
+                <div class="calendar-day header">Seg</div>
+                <div class="calendar-day header">Ter</div>
+                <div class="calendar-day header">Qua</div>
+                <div class="calendar-day header">Qui</div>
+                <div class="calendar-day header">Sex</div>
+                <div class="calendar-day header">Sáb</div>
+            `;
+
+            for (let i = 0; i < startDay; i++) {
+                calendar.innerHTML += `<div class="calendar-day"></div>`;
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const events = clients.filter(client => client.appointment_date === dateStr);
+                const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
+                const hasEvent = events.length > 0;
+                const eventHTML = hasEvent ? `<div class="event-count">${events.length}</div>` : '';
+                calendar.innerHTML += `
+                    <div class="calendar-day ${isToday ? 'today' : ''} ${hasEvent ? 'has-event' : ''}" ${hasEvent ? `onclick="showDayEvents('${dateStr}')"` : ''}>
+                        <span>${day}</span>
+                        ${eventHTML}
+                    </div>
+                `;
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        document.getElementById('prevMonth').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendar();
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendar();
+        });
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('themeToggle').classList.remove('bi-sun-fill');
+                document.getElementById('themeToggle').classList.add('bi-moon-stars-fill');
+            }
+            await updateCalendar();
+            await updateAppointmentsList();
+            AOS.init({ duration: 800, once: true });
+        });
+    </script>
+</body>
+</html>

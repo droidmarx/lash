@@ -80,7 +80,7 @@
             box-shadow: 0 12px 32px rgba(109, 40, 217, 0.5);
         }
         h2 {
-            font-size: 1.rem;
+            font-size: 1.2rem;
             font-weight: 500;
             color: var(--primary-light);
         }
@@ -331,9 +331,12 @@
                 font-size: 0.7rem;
             }
         }
-                 .dark-theme span{
+                 .dark-theme .calendar-day{
             color: var(--text-dark);
         }
+                 .dark-theme span {
+                     color: var(--text-dark);
+                 }        
         
 h3 {
       font-family: 'Great Vibes', cursive;
@@ -352,19 +355,29 @@ h3 {
       to {
         text-shadow: 0 0 20px #f783ac, 0 0 30px #f783ac, 0 0 40px #f783ac;
       }
-    }        
+    }
+    #themeToggle{
+        margin-right: 20px;
+    }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="https://www.instagram.com/ilashbr?igsh=NjhleG1ndmd1emFn"><h3>I Lash</h3></a>
+            </a>
             <div class="d-flex align-items-center">
                 <i id="themeToggle" class="bi bi-sun-fill theme-toggle" aria-label="Alternar tema"></i>
             </div>
         </div>
     </nav>
     <div class="container-main">
+        <div id="appointments-list" class="card" data-aos="fade-up">
+            <div class="card-body">
+                <h2><i class="bi bi-list-check"></i> Lista de Agendamentos</h2>
+                <ul class="appointments-list" id="appointments-list-body"></ul>
+            </div>
+        </div>
         <div id="agenda" class="card" data-aos="fade-up">
             <div class="card-body">
                 <h2><i class="bi bi-calendar-week-fill"></i> Agendamentos</h2>
@@ -376,12 +389,6 @@ h3 {
                     </div>
                 </div>
                 <div id="calendar"></div>
-            </div>
-        </div>
-        <div id="appointments-list" class="card" data-aos="fade-up">
-            <div class="card-body">
-                <h2><i class="bi bi-list-check"></i> Lista de Agendamentos</h2>
-                <ul class="appointments-list" id="appointments-list-body"></ul>
             </div>
         </div>
     </div>
@@ -519,40 +526,51 @@ h3 {
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const events = clients.filter(client => client.appointment_date === dateStr);
-                const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
-                const hasEvent = events.length > 0;
-                const eventHTML = hasEvent ? `<div class="event-count">${events.length}</div>` : '';
+             
+
+
+                const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+                const hasEvents = events.length > 0;
+                const dayClass = isToday ? 'calendar-day today' : hasEvents ? 'calendar-day has-event' : 'calendar-day';
+                
                 calendar.innerHTML += `
-                    <div class="calendar-day ${isToday ? 'today' : ''} ${hasEvent ? 'has-event' : ''}" ${hasEvent ? `onclick="showDayEvents('${dateStr}')"` : ''}>
-                        <span>${day}</span>
-                        ${eventHTML}
+                    <div class="${dayClass}" onclick="${hasEvents ? `showDayEvents('${dateStr}')` : ''}" style="${hasEvents ? 'cursor: pointer;' : ''}">
+                        ${day}
+                        ${hasEvents ? `<div class="event-count">${events.length}</div>` : ''}
                     </div>
                 `;
             }
         }
 
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-        document.getElementById('prevMonth').addEventListener('click', function() {
+        document.getElementById('prevMonth').addEventListener('click', () => {
             currentDate.setMonth(currentDate.getMonth() - 1);
             updateCalendar();
         });
 
-        document.getElementById('nextMonth').addEventListener('click', function() {
+        document.getElementById('nextMonth').addEventListener('click', () => {
             currentDate.setMonth(currentDate.getMonth() + 1);
             updateCalendar();
         });
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-theme');
                 document.getElementById('themeToggle').classList.remove('bi-sun-fill');
                 document.getElementById('themeToggle').classList.add('bi-moon-stars-fill');
             }
-            await updateCalendar();
-            await updateAppointmentsList();
-            AOS.init({ duration: 800, once: true });
+            
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            updateCalendar();
+            updateAppointmentsList();
         });
     </script>
 </body>

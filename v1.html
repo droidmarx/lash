@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -697,6 +698,9 @@
             #appointments-list .appointment-item p {
                 font-size: 0.85rem;
             }
+            .section-icon[data-section="expired-clients-list"] {
+                color: #DC2626; /* Ícone vermelho no mobile */
+            }
         }
         #newMaintenanceModal, #clientDetailsModal, #cadastroModal, #rescheduleModal {
             z-index: 3051;
@@ -748,6 +752,64 @@
             padding: 0.5rem 1rem;
             font-size: 0.9rem;
         }
+        /* --- Novo Estilo para Clientes Vencidos --- */
+        #expired-clients-list {
+            border: 2px solid #DC2626; /* Vermelho/perigo */
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.5);
+        }
+        .dark-theme #expired-clients-list {
+            border-color: #EF4444; /* Vermelho mais claro no dark mode */
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
+        }
+        #expired-clients-list .card-body {
+            padding: 1.5rem;
+        }
+        .expired-client-item {
+            background: rgba(220, 38, 38, 0.05); /* Fundo sutilmente vermelho */
+            border-left: 5px solid #DC2626;
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .dark-theme .expired-client-item {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: #EF4444;
+        }
+        .expired-client-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+        }
+        .expired-client-info p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        .expired-client-info strong {
+            color: #DC2626;
+        }
+        .dark-theme .expired-client-info strong {
+            color: #EF4444;
+        }
+        .btn-reagendar-expired {
+            background: #FBBF24; /* Cor secundária (laranja) */
+            border: none;
+            color: var(--text-light);
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark-theme .btn-reagendar-expired {
+            background: var(--secondary-dark); /* Cor secundária (laranja escuro) */
+            color: var(--text-dark);
+        }
+        .btn-reagendar-expired:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -785,10 +847,20 @@
     </div>
     <div class="container-main">
         <div class="section-icons">
+            <i class="bi bi-clock-history section-icon" data-section="expired-clients-list"></i>
             <i class="bi bi-calendar-check-fill section-icon" data-section="appointments-list"></i>
             <i class="bi bi-calendar-week-fill section-icon" data-section="agenda"></i>
             <i class="bi bi-people-fill section-icon" data-section="clients-list"></i>
         </div>
+        
+        <div id="expired-clients-list" class="card collapsible-section" data-aos="fade-down">
+            <div class="card-body section-content">
+                <h2><i class="bi bi-clock-history"></i> Clientes Vencidos (Reagendar)</h2>
+                <ul id="expired-clients-list-body" class="list-unstyled">
+                    </ul>
+            </div>
+        </div>
+
         <div id="appointments-list" class="card collapsible-section" data-aos="fade-up">
             <div class="card-body section-content">
                 <h2><i class="bi bi-calendar-check-fill"></i> Lista de Agendamentos</h2>
@@ -1216,7 +1288,8 @@
                 await updateClientsTable(document.getElementById('searchInput').value);
                 await updateCalendar();
                 await updateAppointmentsList();
-                await updateNextAppointment(); // Atualiza o próximo agendamento
+                await updateNextAppointment(); 
+                await updateExpiredClientsList(); // NOVO: Atualiza clientes vencidos
                 bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
                 alert('Cliente excluído com sucesso!');
             } catch (error) {
@@ -1244,8 +1317,9 @@
         function validateForm(client) {
             const today = new Date().toISOString().split('T')[0];
             if (client.appointment_date < today) {
-                alert('A data do agendamento não pode ser anterior a hoje.');
-                return false;
+                // Permite agendar no passado, mas com um aviso suave (para a seção "Clientes Vencidos")
+                // Se quiser BLOQUEAR, mude para: alert('A data do agendamento não pode ser anterior a hoje.'); return false;
+                console.warn('Agendamento no passado. Cliente será movido para a lista de Vencidos.');
             }
             const whatsappRegex = /^\+55\s?\d{2}\s?\d{9}$/;
             if (!whatsappRegex.test(client.whatsapp)) {
@@ -1360,6 +1434,54 @@
                 eventsList.appendChild(li);
             }
             bootstrap.Modal.getOrCreateInstance(modal).show();
+        }
+
+        // NOVO: Função para listar clientes com agendamentos passados (Clientes Vencidos)
+        async function updateExpiredClientsList() {
+            const clients = await getClients();
+            const listBody = document.getElementById('expired-clients-list-body');
+            listBody.innerHTML = '';
+            const now = new Date();
+            const nowDateTime = now.getTime();
+
+            // Filtra apenas agendamentos que já passaram
+            const expiredClients = clients.filter(client => {
+                const appointmentDateTime = new Date(`${client.appointment_date}T${client.appointment_time}`);
+                return appointmentDateTime.getTime() < nowDateTime;
+            }).sort((a, b) => {
+                // Ordena do mais antigo para o mais recente (o que venceu há mais tempo aparece primeiro)
+                const dateTimeA = new Date(`${a.appointment_date}T${a.appointment_time}`);
+                const dateTimeB = new Date(`${b.appointment_date}T${b.appointment_time}`);
+                return dateTimeA - dateTimeB;
+            });
+
+            expiredClients.forEach((client, idx) => {
+                const li = document.createElement('li');
+                li.className = 'expired-client-item';
+                li.setAttribute('data-aos', 'zoom-in-right');
+                li.setAttribute('data-aos-delay', idx * 50);
+
+                const type = client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
+                const info = document.createElement('div');
+                info.className = 'expired-client-info';
+                info.innerHTML = `
+                    <p><strong>${client.name}</strong></p>
+                    <p>${type} - ${formatDate(client.appointment_date)} ${formatTime(client.appointment_time)}</p>
+                `;
+
+                const button = document.createElement('button');
+                button.className = 'btn-reagendar-expired btn btn-sm';
+                button.innerHTML = '<i class="bi bi-arrow-repeat"></i> Reagendar';
+                button.onclick = () => openRescheduleModal(client);
+
+                li.appendChild(info);
+                li.appendChild(button);
+                listBody.appendChild(li);
+            });
+
+            if (expiredClients.length === 0) {
+                listBody.innerHTML = '<li class="p-3 text-center text-muted">🎉 Nenhum cliente vencido. Tudo em dia!</li>';
+            }
         }
 
         async function updateAppointmentsList() {
@@ -1567,7 +1689,8 @@
         }
 
         function toggleSection(sectionId) {
-            const sections = ['appointments-list', 'agenda', 'clients-list'];
+            // ATUALIZADO: Inclui a nova seção 'expired-clients-list'
+            const sections = ['expired-clients-list', 'appointments-list', 'agenda', 'clients-list']; 
             sections.forEach(id => {
                 const section = document.getElementById(id);
                 if (id === sectionId) {
@@ -1602,7 +1725,8 @@
                 await updateClientsTable(document.getElementById('searchInput').value);
                 await updateCalendar();
                 await updateAppointmentsList();
-                await updateNextAppointment(); // Atualiza o próximo agendamento
+                await updateNextAppointment(); 
+                await updateExpiredClientsList(); // NOVO: Atualiza clientes vencidos
                 this.reset();
                 document.getElementById('editId').value = '';
                 document.getElementById('cadastroModalLabel').textContent = 'Cadastrar Cliente';
@@ -1639,7 +1763,8 @@
                 await updateClientsTable(document.getElementById('searchInput').value);
                 await updateCalendar();
                 await updateAppointmentsList();
-                await updateNextAppointment(); // Atualiza o próximo agendamento
+                await updateNextAppointment(); 
+                await updateExpiredClientsList(); // NOVO: Atualiza clientes vencidos
                 this.reset();
                 bootstrap.Modal.getInstance(document.getElementById('rescheduleModal')).hide();
                 alert(`Agendamento de ${client.name} reagendado para ${formatDate(client.appointment_date)} às ${formatTime(client.appointment_time)} com sucesso!`);
@@ -1671,7 +1796,8 @@
                 await updateClientsTable(document.getElementById('searchInput').value);
                 await updateCalendar();
                 await updateAppointmentsList();
-                await updateNextAppointment(); // Atualiza o próximo agendamento
+                await updateNextAppointment(); 
+                await updateExpiredClientsList(); // NOVO: Atualiza clientes vencidos
                 this.reset();
                 bootstrap.Modal.getInstance(document.getElementById('newMaintenanceModal')).hide();
                 alert('Nova manutenção agendada com sucesso!');
@@ -1744,12 +1870,21 @@
                 document.getElementById('themeToggle').classList.add('bi-moon-stars-fill');
             }
             if (window.innerWidth <= 768) {
-                // Apenas a lista de agendamentos fica expandida inicialmente
-                document.getElementById('appointments-list').classList.remove('minimized');
-                document.getElementById('appointments-list').classList.add('expanded');
+                // NOVO: A lista de clientes vencidos fica expandida inicialmente no mobile
+                document.getElementById('expired-clients-list').classList.remove('minimized');
+                document.getElementById('expired-clients-list').classList.add('expanded');
+                document.getElementById('appointments-list').classList.add('minimized');
                 document.getElementById('agenda').classList.add('minimized');
                 document.getElementById('clients-list').classList.add('minimized');
+            } else {
+                // No desktop, as outras listas devem estar minimizadas por padrão, exceto as principais.
+                document.getElementById('expired-clients-list').classList.add('expanded');
+                document.getElementById('appointments-list').classList.add('expanded');
+                document.getElementById('agenda').classList.add('expanded');
+                document.getElementById('clients-list').classList.add('expanded');
             }
+            
+            await updateExpiredClientsList(); // NOVO: Chamada para a lista de vencidos
             await updateClientsTable();
             await updateCalendar();
             await updateAppointmentsList();
@@ -1763,3 +1898,4 @@
     </script>
 </body>
 </html>
+

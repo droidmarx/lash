@@ -19,8 +19,8 @@
       <input id="telefone" type="text" placeholder="(19) 99911-08406" 
         class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-pink-400 outline-none">
     </div>
-    <button onclick="buscarAgenda()" 
-      class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded-lg font-medium transition">
+    <button id="botaoPesquisar" onclick="buscarAgenda()" 
+      class="w-full bg-pink-500 text-white py-2 px-4 rounded-lg font-medium transition opacity-50 cursor-not-allowed" disabled>
       Buscar Agendamentos
     </button>
 
@@ -192,6 +192,22 @@
         console.error(error);
       }
     }
+
+    // Habilitar/desabilitar o botão de pesquisa com base no conteúdo do input
+    const telefoneInput = document.getElementById('telefone');
+    const botaoPesquisar = document.getElementById('botaoPesquisar');
+
+    telefoneInput.addEventListener('input', () => {
+      if (telefoneInput.value.trim().length > 0) {
+        botaoPesquisar.disabled = false;
+        botaoPesquisar.classList.remove('opacity-50', 'cursor-not-allowed');
+        botaoPesquisar.classList.add('hover:bg-pink-600');
+      } else {
+        botaoPesquisar.disabled = true;
+        botaoPesquisar.classList.add('opacity-50', 'cursor-not-allowed');
+        botaoPesquisar.classList.remove('hover:bg-pink-600');
+      }
+    });
   </script>
 </body>
 </html>

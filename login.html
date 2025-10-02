@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Agenda</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gradient-to-br from-pink-100 to-pink-200 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center text-pink-600 mb-6 flex items-center justify-center gap-2">
+      <i data-lucide="calendar-days" class="w-7 h-7"></i> Minha Agenda
+    </h1>
+
+    <!-- Campo de busca -->
+    <div class="mb-4">
+      <label for="telefone" class="block text-gray-700 font-medium mb-1">Digite seu número de celular:</label>
+      <input id="telefone" type="text" placeholder="(19) 99911-08406" 
+        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-pink-400 outline-none">
+    </div>
+    <button onclick="buscarAgenda()" 
+      class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded-lg font-medium transition">
+      Buscar Agendamentos
+    </button>
+
+    <!-- Resultados -->
+    <div id="resultado" class="mt-6 space-y-4"></div>
+  </div>
+
+  <script>
+    // Função para normalizar números (remove tudo que não for dígito)
+    function normalizarNumero(numero) {
+      return numero.replace(/\D/g, "");
+    }
+
+    // Função para obter o dia da semana em português
+    function obterDiaSemana(data) {
+      const dias = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+      return dias[data.getDay()];
+    }
+
+    // Função para formatar data e hora para o WhatsApp e exibição
+    function formatarDataHora(dataHora, includeTime = true) {
+      const data = new Date(dataHora);
+      if (isNaN(data.getTime())) {
+        return "Data inválida";
+      }
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      const diaSemana = obterDiaSemana(data);
+      if (includeTime) {
+        const horas = String(data.getHours()).padStart(2, '0');
+        const minutos = String(data.getMinutes()).padStart(2, '0');
+        return `${dia}/${mes}/${ano} (${diaSemana}) às ${horas}:${minutos}`;
+      }
+      return `${dia}/${mes}/${ano} (${diaSemana})`;
+    }
+
+    // Função para obter o dia da semana a partir da data do agendamento
+    function obterDiaSemanaAgendamento(dataString) {
+      try {
+        let data;
+        // Tenta diferentes formatos de data
+        if (dataString.includes('/')) {
+          // Formato DD/MM/YYYY
+          const [dia, mes, ano] = dataString.split('/').map(Number);
+          data = new Date(ano, mes - 1, dia);
+        } else if (dataString.includes('-')) {
+          // Formato YYYY-MM-DD
+          data = new Date(dataString);
+        } else {
+          // Tenta parsing genérico
+          data = new Date(dataString);
+        }
+
+        if (isNaN(data.getTime())) {
+          console.error("Data inválida recebida:", dataString);
+          return "Data inválida";
+        }
+        return formatarDataHora(data, false); // Retorna apenas data com dia da semana
+      } catch (error) {
+        console.error("Erro ao processar data:", dataString, error);
+        return "Data inválida";
+      }
+    }
+
+    // Função para abrir o modal com o seletor de data e hora
+    function abrirSeletorDataHora(appointmentId, appointmentType) {
+      // Criar modal
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center';
+      modal.innerHTML = `
+        <div class="bg-white p-6 rounded-2xl shadow-xl max-w-sm w-full">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Escolha a nova data e horário</h2>
+          <input type="datetime-local" id="novaDataHora" class="w-full border rounded-lg p-2 mb-4 focus:ring-2 focus:ring-pink-400 outline-none">
+          <p id="diaSemana" class="text-sm text-gray-600 mb-4"></p>
+          <div class="flex gap-2">
+            <button onclick="confirmarReagendamento('${appointmentId}', '${appointmentType}')" class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded-lg font-medium transition">Confirmar</button>
+            <button onclick="this.closest('.fixed').remove()" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg font-medium transition">Cancelar</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      // Adicionar evento para atualizar o dia da semana quando a data mudar
+      const inputDataHora = document.getElementById('novaDataHora');
+      inputDataHora.addEventListener('change', () => {
+        const dataSelecionada = inputDataHora.value;
+        if (dataSelecionada) {
+          const formattedDate = formatarDataHora(dataSelecionada, false);
+          document.getElementById('diaSemana').textContent = `Dia da semana: ${formattedDate}`;
+        } else {
+          document.getElementById('diaSemana').textContent = '';
+        }
+      });
+    }
+
+    // Função para confirmar o reagendamento e abrir o WhatsApp
+    function confirmarReagendamento(appointmentId, appointmentType) {
+      const novaDataHora = document.getElementById('novaDataHora').value;
+      if (!novaDataHora) {
+        alert('Por favor, selecione uma data e horário.');
+        return;
+      }
+      const dataHoraFormatada = formatarDataHora(novaDataHora);
+      const tipoTrabalho = appointmentType === "application" ? "Aplicação" : "Manutenção";
+      const mensagem = `Oi tudo bem? Gostaria de alterar o dia do meu agendamento de ${tipoTrabalho} para ${dataHoraFormatada} por gentileza!`;
+      const url = `https://wa.me/+5519989128693?text=${encodeURIComponent(mensagem)}`;
+      window.open(url, '_blank');
+      // Fechar o modal
+      document.querySelector('.fixed').remove();
+    }
+
+    async function buscarAgenda() {
+      const telefoneInput = document.getElementById('telefone').value.trim();
+      const resultadoDiv = document.getElementById('resultado');
+      resultadoDiv.innerHTML = "<p class='text-gray-500 text-center'>Buscando...</p>";
+
+      // Normalizar entrada do usuário
+      const telefoneNormalizado = normalizarNumero(telefoneInput);
+
+      try {
+        const resposta = await fetch("https://683d14e6199a0039e9e427bd.mockapi.io/Dados");
+        const dados = await resposta.json();
+
+        // Filtrar: normaliza o número do banco também
+        const filtrados = dados.filter(item => {
+          const numeroAPI = normalizarNumero(item.whatsapp);
+          return numeroAPI.endsWith(telefoneNormalizado); // aceita com ou sem +55
+        });
+
+        if (filtrados.length === 0) {
+          resultadoDiv.innerHTML = "<p class='text-red-500 text-center font-medium'>Nenhum agendamento encontrado.</p>";
+          return;
+        }
+
+        resultadoDiv.innerHTML = filtrados.map(item => `
+          <div class="bg-pink-50 border border-pink-200 p-4 rounded-xl shadow-sm">
+            <div>
+              <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <i data-lucide="user" class="w-5 h-5 text-pink-500"></i> ${item.name}
+              </h2>
+              <p class="text-sm text-gray-600 flex items-center gap-2">
+                <i data-lucide="scissors" class="w-4 h-4 text-pink-400"></i>
+                ${item.appointment_type === "application" ? "Aplicação" : "Manutenção"} - ${item.eyelash_model}
+              </p>
+            </div>
+            <div class="mt-3 bg-white border border-pink-300 rounded-lg p-3 text-center">
+              <p class="text-sm text-gray-500">Data</p>
+              <p class="text-xl font-bold text-pink-600 flex items-center justify-center gap-2">
+                <i data-lucide="calendar" class="w-6 h-6"></i> ${obterDiaSemanaAgendamento(item.appointment_date)}
+              </p>
+              <p class="text-sm text-gray-500 mt-1">Horário</p>
+              <p class="text-lg font-semibold text-gray-700 flex items-center justify-center gap-2">
+                <i data-lucide="clock" class="w-5 h-5"></i> ${item.appointment_time}
+              </p>
+            </div>
+            <div class="mt-3">
+              <button onclick="abrirSeletorDataHora('${item.id}', '${item.appointment_type}')"
+                class="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 px-4 rounded-lg font-medium transition">
+                Reagendar
+              </button>
+            </div>
+          </div>
+        `).join("");
+        lucide.createIcons();
+
+      } catch (error) {
+        resultadoDiv.innerHTML = "<p class='text-red-500 text-center font-medium'>Erro ao buscar dados.</p>";
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>

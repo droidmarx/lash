@@ -435,11 +435,14 @@
             color: var(--secondary-dark);
         }
         .table th {
-            background: linear-gradient(45deg, var(--primary-light), #EC4899);
-            color: #FFFFFF;
-            font-weight: 500;
-            border: none;
-        }
+                    background: -webkit-linear-gradient(bottom left, var(--primary-light), #EC4899);
+                    background: -moz-linear-gradient(bottom left, var(--primary-light), #EC4899);
+                    background: -o-linear-gradient(bottom left, var(--primary-light), #EC4899);
+                    background: linear-gradient(to top right, var(--primary-light), #EC4899);
+                    color: #FFFFFF;
+                    font-weight: 500;
+                    border: none;
+                }
         .dark-theme .table th {
             background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
         }
@@ -698,9 +701,7 @@
             #appointments-list .appointment-item p {
                 font-size: 0.85rem;
             }
-            .section-icon[data-section="expired-clients-list"] {
-                color: #DC2626; /* Ícone vermelho no mobile */
-            }
+
         }
         #newMaintenanceModal, #clientDetailsModal, #cadastroModal, #rescheduleModal {
             z-index: 3051;
@@ -708,6 +709,7 @@
         }
         /* Novo estilo para o Próximo Agendamento */
         #next-appointment-card {
+            margin-top:20px;
             border: 2px solid var(--primary-light);
             box-shadow: 0 4px 16px rgba(244, 114, 182, 0.5);
         }
@@ -835,7 +837,7 @@
         </div>
     </nav>
     
-    <div class="container" style="max-width: 900px;">
+    <div class="container" style="max-width: 700px;">
         <div id="next-appointment-card" class="card" data-aos="zoom-in">
             <div class="card-body">
                 <div id="next-appointment-info">
@@ -850,10 +852,11 @@
     </div>
     <div class="container-main">
         <div class="section-icons">
-            <i class="bi bi-clock-history section-icon" data-section="expired-clients-list"></i>
+            
             <i class="bi bi-calendar-check-fill section-icon" data-section="appointments-list"></i>
             <i class="bi bi-calendar-week-fill section-icon" data-section="agenda"></i>
             <i class="bi bi-people-fill section-icon" data-section="clients-list"></i>
+            <i class="bi bi-clock-history section-icon" data-section="expired-clients-list"></i>
         </div>
         
         <div id="expired-clients-list" class="card collapsible-section" data-aos="fade-down">
@@ -866,7 +869,7 @@
 
         <div id="appointments-list" class="card collapsible-section" data-aos="fade-up">
             <div class="card-body section-content">
-                <h2><i class="bi bi-calendar-check-fill"></i> Lista de Agendamentos</h2>
+                <h2><i  class="bi bi-calendar-check-fill"></i> Lista de Agendamentos</h2>
                 <ul id="appointments-list-body" class="list-unstyled"></ul>
             </div>
         </div>
@@ -1693,7 +1696,7 @@
 
         function toggleSection(sectionId) {
             // ATUALIZADO: Inclui a nova seção 'expired-clients-list'
-            const sections = ['expired-clients-list', 'appointments-list', 'agenda', 'clients-list']; 
+            const sections = ['appointments-list','expired-clients-list',  'agenda', 'clients-list']; 
             sections.forEach(id => {
                 const section = document.getElementById(id);
                 if (id === sectionId) {
@@ -1874,9 +1877,9 @@
             }
             if (window.innerWidth <= 768) {
                 // NOVO: A lista de clientes vencidos fica expandida inicialmente no mobile
-                document.getElementById('expired-clients-list').classList.remove('minimized');
-                document.getElementById('expired-clients-list').classList.add('expanded');
-                document.getElementById('appointments-list').classList.add('minimized');
+                document.getElementById('appointments-list').classList.remove('minimized');
+                document.getElementById('appointments-list').classList.add('expanded');
+                document.getElementById('expired-clients-list').classList.add('minimized');
                 document.getElementById('agenda').classList.add('minimized');
                 document.getElementById('clients-list').classList.add('minimized');
             } else {

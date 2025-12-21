@@ -106,27 +106,27 @@
     #fullImage {
       transform-origin: center center;
       transition: transform 0.2s ease;
-      touch-action: none; /* Impede comportamentos padrão do navegador */
-      user-select: none; /* Evita seleção de texto durante interação */
+      touch-action: none;
+      user-select: none;
     }
     /* Evitar zoom da página inteira em dispositivos móveis */
     #imageModal {
-      overscroll-behavior: contain; /* Impede rolagem da página ao interagir com o modal */
+      overscroll-behavior: contain;
     }
     /* Estilo para o botão de fechar no footer */
     #imageModal .close-button-container {
       position: sticky;
       bottom: 0;
-      background: white; /* Fundo branco para cobrir a imagem */
-      padding: 0.75rem; /* Reduzido para um botão menor */
-      z-index: 10; /* Garante que o botão fique acima de tudo */
+      background: white;
+      padding: 0.75rem;
+      z-index: 10;
       border-bottom-left-radius: 1rem;
       border-bottom-right-radius: 1rem;
     }
     /* Estilo para o botão de fechar menor */
     #imageModal .close-button-container button {
-      padding: 0.5rem 1rem; /* Reduzido para um botão menor */
-      font-size: 0.875rem; /* Tamanho de fonte menor (equivalente a text-sm) */
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
     }
     /* Galeria: animação de entrada das imagens */
     .gallery figure {
@@ -138,7 +138,6 @@
     .gallery figure:nth-child(3) { animation: staggerIn 0.7s ease-out 0.3s forwards; }
     .gallery figure:nth-child(4) { animation: staggerIn 0.7s ease-out 0.4s forwards; }
     .gallery figure:nth-child(5) { animation: staggerIn 0.7s ease-out 0.5s forwards; }
-    /* Mais filhos se necessário */
     /* Estilos para FullCalendar */
     #calendar {
       max-width: 100%;
@@ -158,6 +157,68 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    /* Estilos para o modal de horários */
+    .appointment-card {
+      background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+      border: 1px solid #f9a8d4;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+    .appointment-time {
+      font-weight: bold;
+      color: #831843;
+      font-size: 1.1em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .appointment-details {
+      color: #be185d;
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+    /* Destacar o dia clicado */
+    .fc-daygrid-day.fc-day-selected {
+      background-color: #fdf2f8 !important;
+      box-shadow: inset 0 0 0 2px #f472b6;
+    }
+    /* Status dos horários */
+    .time-slot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      background: #f8f9fa;
+    }
+    .time-slot.booked {
+      background: #fee2e2;
+      border-left: 4px solid #ef4444;
+    }
+    .time-slot.available {
+      background: #dcfce7;
+      border-left: 4px solid #22c55e;
+    }
+    .time-range {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .time-status {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+    .status-booked {
+      background: #fecaca;
+      color: #991b1b;
+    }
+    .status-available {
+      background: #bbf7d0;
+      color: #166534;
     }
   </style>
 </head>
@@ -209,10 +270,28 @@
     <div id="resultado" class="mt-4 sm:mt-6 space-y-4"></div>
   </div>
 
-  <!-- Calendário Interativo -->
+  <!-- Calendário Interativo com Seção de Detalhes -->
   <div class="w-full max-w-md mb-4 sm:mb-6 animate-fadeInUp" style="animation-delay: 0.4s;">
     <h3 class="text-lg font-semibold text-gray-800 mb-3 text-center">Calendário de Disponibilidade</h3>
     <div id="calendar"></div>
+    
+    <!-- Seção para exibir horários do dia selecionado -->
+    <div id="dayAppointmentsSection" class="mt-6 bg-white p-4 rounded-2xl shadow-lg hidden">
+      <h4 id="dayTitle" class="text-lg font-semibold text-pink-600 mb-4 flex items-center gap-2">
+        <i data-lucide="clock" class="w-5 h-5"></i>
+        <span>Horários do Dia: <span id="selectedDate">...</span></span>
+      </h4>
+      <div id="dayAppointmentsList" class="space-y-2">
+        <!-- Horários serão inseridos aqui dinamicamente -->
+      </div>
+      <div id="availableSlots" class="mt-4">
+        <h5 class="text-md font-medium text-gray-700 mb-2">Horários Disponíveis:</h5>
+        <div id="availableSlotsList" class="space-y-2">
+          <!-- Horários disponíveis serão inseridos aqui -->
+        </div>
+      </div>
+      <p id="noAppointments" class="text-gray-500 text-center py-4 hidden">Nenhum agendamento para este dia.</p>
+    </div>
   </div>
 
   <!-- Modal para Agendamento -->
@@ -271,22 +350,88 @@
     const AGENDAMENTOS_URL = 'https://683d14e6199a0039e9e427bd.mockapi.io/Dados';
 
     let calendar;
+    let selectedDay = null;
+    let allAppointments = [];
+
+    // Horário de funcionamento
+    const WORKING_HOURS = {
+      start: 9, // 09:00
+      end: 19   // 19:00
+    };
+
+    // Função para adicionar 2 horas a um horário
+    function addTwoHours(timeStr) {
+      const [hours, minutes] = timeStr.split(':').map(Number);
+      let newHours = hours + 2;
+      let newMinutes = minutes;
+      
+      // Formatar para 2 dígitos
+      const formattedHours = newHours.toString().padStart(2, '0');
+      const formattedMinutes = newMinutes.toString().padStart(2, '0');
+      
+      return `${formattedHours}:${formattedMinutes}`;
+    }
+
+    // Função para gerar horários disponíveis
+    function generateAvailableSlots(bookedSlots, dateStr) {
+      const slots = [];
+      const currentDate = new Date();
+      const selectedDate = new Date(dateStr);
+      const isToday = selectedDate.toDateString() === currentDate.toDateString();
+      const currentHour = currentDate.getHours();
+      
+      for (let hour = WORKING_HOURS.start; hour <= WORKING_HOURS.end - 2; hour++) {
+        // Pular horários passados se for hoje
+        if (isToday && hour < currentHour) {
+          continue;
+        }
+        
+        const startTime = `${hour.toString().padStart(2, '0')}:00`;
+        const endTime = addTwoHours(startTime);
+        
+        // Verificar se este horário está ocupado
+        const isBooked = bookedSlots.some(slot => {
+          const slotStart = slot.startTime;
+          const slotEnd = slot.endTime;
+          
+          // Verificar sobreposição de horários
+          return (startTime >= slotStart && startTime < slotEnd) ||
+                 (endTime > slotStart && endTime <= slotEnd) ||
+                 (startTime <= slotStart && endTime >= slotEnd);
+        });
+        
+        if (!isBooked) {
+          slots.push({
+            startTime,
+            endTime,
+            formatted: `${startTime} às ${endTime}`
+          });
+        }
+      }
+      
+      return slots;
+    }
 
     // Função para carregar eventos reais da API
     async function carregarEventosReais() {
       try {
         const resposta = await fetch(AGENDAMENTOS_URL);
         const dados = await resposta.json();
-        const eventos = dados.map(item => ({
-          title: `${item.appointment_type === "application" ? "Aplicação" : "Manutenção"}`,
-          date: item.appointment_date, // Assumindo formato YYYY-MM-DD
-          extendedProps: {
-            time: item.appointment_time,
-            model: item.eyelash_model,
-            type: item.appointment_type,
-            name: item.name // Para tooltip
-          }
-        }));
+        allAppointments = dados; // Salvar para uso posterior
+        
+        const eventos = dados.map(item => {
+          const endTime = addTwoHours(item.appointment_time);
+          return {
+            title: `${item.appointment_type === "application" ? "Aplicação" : "Manutenção"}`,
+            date: item.appointment_date,
+            extendedProps: {
+              time: item.appointment_time,
+              endTime: endTime,
+              model: item.eyelash_model,
+              type: item.appointment_type
+            }
+          };
+        });
         return eventos;
       } catch (error) {
         console.error('Erro ao carregar eventos:', error);
@@ -294,10 +439,103 @@
       }
     }
 
+    // Função para exibir horários de um dia específico
+    function exibirHorariosDoDia(dataStr) {
+      const section = document.getElementById('dayAppointmentsSection');
+      const title = document.getElementById('selectedDate');
+      const list = document.getElementById('dayAppointmentsList');
+      const availableSlotsList = document.getElementById('availableSlotsList');
+      const noAppointments = document.getElementById('noAppointments');
+      
+      // Formatar data para exibição
+      const data = new Date(dataStr);
+      const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+      const dataFormatada = data.toLocaleDateString('pt-BR', options);
+      
+      title.textContent = dataFormatada;
+      
+      // Filtrar agendamentos para o dia selecionado
+      const agendamentosDoDia = allAppointments.filter(item => {
+        return item.appointment_date === dataStr;
+      });
+      
+      // Ordenar por horário
+      agendamentosDoDia.sort((a, b) => {
+        return a.appointment_time.localeCompare(b.appointment_time);
+      });
+      
+      // Limpar listas
+      list.innerHTML = '';
+      availableSlotsList.innerHTML = '';
+      
+      if (agendamentosDoDia.length === 0) {
+        noAppointments.classList.remove('hidden');
+      } else {
+        noAppointments.classList.add('hidden');
+        
+        // Preparar slots ocupados para verificação de disponibilidade
+        const bookedSlots = agendamentosDoDia.map(appointment => {
+          const endTime = addTwoHours(appointment.appointment_time);
+          return {
+            startTime: appointment.appointment_time,
+            endTime: endTime
+          };
+        });
+        
+        // Gerar horários disponíveis
+        const availableSlots = generateAvailableSlots(bookedSlots, dataStr);
+        
+        // Adicionar cada agendamento à lista
+        agendamentosDoDia.forEach(appointment => {
+          const endTime = addTwoHours(appointment.appointment_time);
+          const tipo = appointment.appointment_type === "application" ? "Aplicação" : "Manutenção";
+          
+          const timeSlot = document.createElement('div');
+          timeSlot.className = 'time-slot booked';
+          
+          timeSlot.innerHTML = `
+            <div>
+              <div class="time-range">${appointment.appointment_time} às ${endTime}</div>
+              <div class="text-xs text-gray-600">${tipo} - ${appointment.eyelash_model}</div>
+            </div>
+            <div class="time-status status-booked">Ocupado</div>
+          `;
+          
+          list.appendChild(timeSlot);
+        });
+        
+        // Adicionar horários disponíveis
+        if (availableSlots.length > 0) {
+          availableSlots.forEach(slot => {
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'time-slot available';
+            timeSlot.innerHTML = `
+              <div class="time-range">${slot.formatted}</div>
+              <div class="time-status status-available">Disponível</div>
+            `;
+            availableSlotsList.appendChild(timeSlot);
+          });
+        } else {
+          availableSlotsList.innerHTML = '<p class="text-gray-500 text-sm">Não há horários disponíveis</p>';
+        }
+      }
+      
+      // Mostrar a seção com animação
+      section.classList.remove('hidden');
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+      
+      requestAnimationFrame(() => {
+        section.style.opacity = '1';
+        section.style.transform = 'translateY(0)';
+      });
+    }
+
     // Inicializar FullCalendar com eventos reais
     document.addEventListener('DOMContentLoaded', async function() {
       const calendarEl = document.getElementById('calendar');
       const eventos = await carregarEventosReais();
+      
       calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         locale: 'pt-br',
@@ -308,17 +546,69 @@
         },
         events: eventos,
         eventDidMount: function(info) {
-          // Adicionar tooltip ou detalhes se necessário
-          info.el.title = `${info.event.extendedProps.name} - ${info.event.title} - ${info.event.extendedProps.time} - ${info.event.extendedProps.model}`;
+          const startTime = info.event.extendedProps.time;
+          const endTime = info.event.extendedProps.endTime;
+          info.el.title = `${startTime} às ${endTime} - ${info.event.title} - ${info.event.extendedProps.model}`;
         },
         dateClick: function(info) {
+          // Remover seleção anterior
+          if (selectedDay) {
+            const prevDayEl = document.querySelector('.fc-day-selected');
+            if (prevDayEl) {
+              prevDayEl.classList.remove('fc-day-selected');
+            }
+          }
+          
+          // Selecionar novo dia
+          selectedDay = info.dateStr;
+          info.dayEl.classList.add('fc-day-selected');
+          
           // Preencher o campo de data no modal de agendamento
           document.getElementById('dataSelecionada').value = info.dateStr;
-          // Opcional: Abrir modal automaticamente
-          openModal();
+          
+          // Exibir horários do dia selecionado
+          exibirHorariosDoDia(info.dateStr);
+        },
+        eventClick: function(info) {
+          // Quando clicar em um evento, mostrar os detalhes do dia
+          const eventDate = info.event.startStr.split('T')[0];
+          
+          // Remover seleção anterior
+          if (selectedDay) {
+            const prevDayEl = document.querySelector('.fc-day-selected');
+            if (prevDayEl) {
+              prevDayEl.classList.remove('fc-day-selected');
+            }
+          }
+          
+          // Selecionar o dia do evento
+          selectedDay = eventDate;
+          
+          // Encontrar e selecionar o elemento do dia
+          const allDayEls = document.querySelectorAll('.fc-daygrid-day');
+          allDayEls.forEach(dayEl => {
+            const dayDate = dayEl.getAttribute('data-date');
+            if (dayDate === eventDate) {
+              dayEl.classList.add('fc-day-selected');
+            }
+          });
+          
+          // Exibir horários do dia
+          exibirHorariosDoDia(eventDate);
         }
       });
       calendar.render();
+      
+      // Selecionar o dia atual por padrão
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      setTimeout(() => {
+        // Simular clique no dia atual
+        const todayEl = document.querySelector(`[data-date="${todayStr}"]`);
+        if (todayEl) {
+          todayEl.click();
+        }
+      }, 500);
     });
 
     // Função para abrir o modal de agendamento com animação suave
@@ -362,7 +652,8 @@
       const horario = document.getElementById('horario').value;
       
       const dataHora = `${data}T${horario}`;
-      const mensagem = `Olá! Meu nome é ${nome}, meu número é ${telefone}. Gostaria de agendar para o modelo ${modelo} no horário ${formatarDataHora(dataHora)}.`;
+      const endTime = addTwoHours(horario);
+      const mensagem = `Olá! Meu nome é ${nome}, meu número é ${telefone}. Gostaria de agendar para o modelo ${modelo} no horário ${horario} às ${endTime} (${formatarDataHora(dataHora)}).`;
       
       const numero = '5519989128693';
       const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
@@ -444,10 +735,8 @@
 
       // Função para atualizar a transformação da imagem
       const updateTransform = () => {
-        // Limitar escala entre 1x e 5x
         scale = Math.min(Math.max(1, scale), 5);
-        // Limitar translação para evitar que a imagem saia completamente da tela
-        const maxTranslate = 100 * (scale - 1); // Ajuste proporcional ao zoom
+        const maxTranslate = 100 * (scale - 1);
         translateX = Math.min(Math.max(translateX, -maxTranslate), maxTranslate);
         translateY = Math.min(Math.max(translateY, -maxTranslate), maxTranslate);
         fullImage.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
@@ -455,14 +744,12 @@
 
       // Configurar eventos de toque
       fullImage.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Impede comportamentos padrão como scroll ou zoom da página
+        e.preventDefault();
         if (e.touches.length === 1) {
-          // Pan com um dedo
           isPanning = true;
           startX = e.touches[0].clientX - translateX;
           startY = e.touches[0].clientY - translateY;
         } else if (e.touches.length === 2) {
-          // Zoom com dois dedos
           isPanning = false;
           const touch1 = e.touches[0];
           const touch2 = e.touches[1];
@@ -478,14 +765,12 @@
       }, { passive: false });
 
       fullImage.addEventListener('touchmove', (e) => {
-        e.preventDefault(); // Impede comportamentos padrão
+        e.preventDefault();
         if (e.touches.length === 1 && isPanning) {
-          // Pan com um dedo
           translateX = e.touches[0].clientX - startX;
           translateY = e.touches[0].clientY - startY;
           updateTransform();
         } else if (e.touches.length === 2) {
-          // Zoom com dois dedos
           const touch1 = e.touches[0];
           const touch2 = e.touches[1];
           const currentDistance = Math.hypot(
@@ -519,7 +804,7 @@
       setTimeout(() => {
         modal.classList.add('hidden');
         const fullImage = document.getElementById('fullImage');
-        fullImage.style.transform = 'scale(1) translate(0, 0)'; // Resetar transformações
+        fullImage.style.transform = 'scale(1) translate(0, 0)';
         modal.style.opacity = '';
         modal.style.transform = '';
       }, 300);
@@ -549,7 +834,7 @@
       if (includeTime) {
         const horas = String(data.getHours()).padStart(2, '0');
         const minutos = String(data.getMinutes()).padStart(2, '0');
-        return `${dia}/${mes}/${ano} (${diaSemana}) às ${horas}:${minutos}`;
+        return `${dia}/${mes}/${ano} (${diaSemana})`;
       }
       return `${dia}/${mes}/${ano} (${diaSemana})`;
     }
@@ -681,25 +966,24 @@
         });
 
         setTimeout(() => {
-          resultadoDiv.innerHTML = filtrados.map((item, index) => `
+          resultadoDiv.innerHTML = filtrados.map((item, index) => {
+            const endTime = addTwoHours(item.appointment_time);
+            const tipo = item.appointment_type === "application" ? "Aplicação" : "Manutenção";
+            
+            return `
             <div class="bg-pink-50 border border-pink-200 p-3 sm:p-4 rounded-xl shadow-sm opacity-0" style="transform: translateY(20px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; animation-delay: ${index * 0.2}s;">
-              <div>
-                <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
-                  <i data-lucide="user" class="w-5 h-5 text-pink-500"></i> ${item.name}
-                </h2>
-                <p class="text-sm text-gray-600 flex items-center gap-2">
-                  <i data-lucide="scissors" class="w-4 h-4 text-pink-400"></i>
-                  ${item.appointment_type === "application" ? "Aplicação" : "Manutenção"} - ${item.eyelash_model}
-                </p>
-              </div>
-              <div class="mt-3 bg-white border border-pink-300 rounded-lg p-3 text-center">
+              <div class="mb-3 bg-white border border-pink-300 rounded-lg p-3 text-center">
                 <p class="text-sm text-gray-500">Data</p>
                 <p class="text-lg sm:text-xl font-bold text-pink-600 flex items-center justify-center gap-2">
                   <i data-lucide="calendar" class="w-5 h-5 sm:w-6 sm:h-6"></i> ${obterDiaSemanaAgendamento(item.appointment_date)}
                 </p>
                 <p class="text-sm text-gray-500 mt-1">Horário</p>
                 <p class="text-base sm:text-lg font-semibold text-gray-700 flex items-center justify-center gap-2">
-                  <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5"></i> ${item.appointment_time}
+                  <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5"></i> ${item.appointment_time} às ${endTime}
+                </p>
+                <p class="text-sm text-pink-600 mt-2">
+                  <i data-lucide="scissors" class="w-4 h-4 inline mr-1"></i>
+                  ${tipo} - ${item.eyelash_model}
                 </p>
               </div>
               <div class="mt-3">
@@ -709,7 +993,7 @@
                 </button>
               </div>
             </div>
-          `).join("");
+          `}).join("");
           // Aplicar fade in nos novos resultados
           const newResults = resultadoDiv.querySelectorAll('div');
           newResults.forEach((div, index) => {

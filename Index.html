@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciamento de Cílios</title>
+    <title>Login - Gerenciamento de Cílios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -30,7 +29,11 @@
             min-height: 100vh;
             color: var(--text-light);
             transition: all 0.3s ease;
-            overflow-x: hidden; /* Evita scroll horizontal */
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
         }
         body.dark-theme {
             background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark), var(--bg-dark), var(--primary-dark));
@@ -41,2025 +44,394 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        .navbar {
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(8px);
-        }
-        .dark-theme .navbar {
-            background: rgba(17, 24, 39, 0.9);
-        }
-        .navbar-brand {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-light);
-        }
-        .dark-theme .navbar-brand {
-            color: var(--primary-dark);
-        }
-        .container-main {
+        .login-container {
             background: var(--bg-light);
             padding: 2rem;
             border-radius: 32px;
             box-shadow: 0 8px 24px rgba(244, 114, 182, 0.4);
-            margin: 2rem auto;
+            width: 100%;
+            max-width: 400px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .dark-theme .container-main {
+        body.dark-theme .login-container {
             background: var(--bg-dark);
             box-shadow: 0 8px 24px rgba(109, 40, 217, 0.4);
         }
-        .container-main:hover {
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary-light), var(--secondary-light));
+            animation: shimmer 2s infinite;
+        }
+        body.dark-theme .login-container::before {
+            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .login-container:hover {
             transform: translateY(-8px);
-            box-shadow: 2px 12px 32px rgba(244, 114, 182, 0.5);
+            box-shadow: 0 12px 32px rgba(244, 114, 182, 0.5);
         }
-        .dark-theme .container-main:hover {
-            box-shadow: 2px 12px 32px rgba(109, 40, 217, 0.5);
+        body.dark-theme .login-container:hover {
+            box-shadow: 0 12px 32px rgba(109, 40, 217, 0.5);
         }
-        h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: var(--text-light);
+        .login-header {
             text-align: center;
             margin-bottom: 2rem;
         }
-        .dark-theme h1 {
-            color: var(--secondary-dark);
-        }
-        h2 {
-            font-size: 1.6rem;
-            font-weight: 500;
+        .login-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
             color: var(--primary-light);
-            cursor: pointer;
+            margin-bottom: 0.5rem;
+            position: relative;
         }
-        .dark-theme h2 {
+        body.dark-theme .login-header h1 {
             color: var(--primary-dark);
         }
-        .card {
-            background: var(--bg-light);
-            border-radius: 24px;
-            border: 1px solid var(--secondary-light);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+        .login-header p {
+            color: var(--text-light);
+            font-weight: 300;
         }
-        .dark-theme .card {
-            background: var(--bg-dark);
-            border-color: var(--secondary-dark);
+        body.dark-theme .login-header p {
+            color: var(--text-dark);
         }
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-light);
+        .form-floating {
+            margin-bottom: 1.5rem;
+            position: relative;
         }
-        .dark-theme .card:hover {
-            border-color: var(--primary-dark);
-        }
-        .form-control {
+        .form-floating input {
+            border: 1px solid #ddd;
             border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
         }
-        .form-control:focus {
+        body.dark-theme .form-floating input {
+            background: rgba(17, 24, 39, 0.8);
+            border-color: #4b5563;
+            color: var(--text-dark);
+        }
+        .form-floating input:focus {
             border-color: var(--secondary-light);
             box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+            outline: none;
         }
-        .dark-theme .form-control:focus {
+        body.dark-theme .form-floating input:focus {
             border-color: var(--secondary-dark);
             box-shadow: 0 0 8px rgba(217, 119, 6, 0.5);
         }
-        .btn-primary {
+        .form-floating label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        body.dark-theme .form-floating label {
+            color: var(--text-dark);
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+            z-index: 2;
+        }
+        body.dark-theme .toggle-password {
+            color: var(--text-dark);
+        }
+        .toggle-password.visible {
+            display: block;
+        }
+        .toggle-password:hover {
+            color: var(--secondary-light);
+            transform: translateY(-50%) scale(1.2);
+        }
+        body.dark-theme .toggle-password:hover {
+            color: var(--secondary-dark);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
             background: linear-gradient(45deg, var(--secondary-light), #F59E0B);
             border: none;
             color: var(--text-light);
             font-weight: 500;
             border-radius: 12px;
-            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .dark-theme .btn-primary {
+        body.dark-theme .btn-login {
             background: linear-gradient(45deg, var(--secondary-dark), #B45309);
             color: var(--text-dark);
         }
-        .btn-primary:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
-        }
-        .dark-theme .btn-primary:hover {
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
-        }
-        .btn-secondary {
-            background: linear-gradient(45deg, var(--primary-light), #EC4899);
-            border: none;
-            color: #FFFFFF;
-            font-weight: 500;
-            border-radius: 12px;
-            padding: 0.8rem 1.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .dark-theme .btn-secondary {
-            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
-        }
-        .btn-secondary:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.5);
-        }
-        .dark-theme .btn-secondary:hover {
-            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.5);
-        }
-        .btn-danger {
-            background: linear-gradient(45deg, #DC2626, #B91C1C);
-            border: none;
-            color: #FFFFFF;
-            font-weight: 500;
-            border-radius: 12px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .btn-danger:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.5);
-        }
-        .dropdown-toggle {
-            background: linear-gradient(45deg, var(--primary-light), var(--secondary-light));
-            color: #FFFFFF;
-            border: none;
-            border-radius: 8px;
-            padding: 0.5rem;
-            font-size: 1.8rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .dark-theme .dropdown-toggle {
-            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
-        }
-        .dropdown-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.5);
-        }
-        .dark-theme .dropdown-toggle:hover {
-            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.5);
-        }
-        .dropdown-menu {
-            background: var(--bg-light);
-            border: 1px solid var(--primary-light);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
-        }
-        .dark-theme .dropdown-menu {
-            background: var(--bg-dark);
-            border-color: var(--primary-dark);
-            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
-        }
-        .dropdown-item {
-            color: var(--text-light);
-            transition: background 0.3s ease;
-        }
-        .dark-theme .dropdown-item {
-            color: var(--text-dark);
-        }
-        .dropdown-item:hover {
-            background: rgba(251, 191, 36, 0.1);
-        }
-        .dark-theme .dropdown-item:hover {
-            background: rgba(217, 119, 6, 0.1);
-        }
-        #calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            background: var(--bg-light);
-            border-radius: 16px;
-            padding: 1rem;
-        }
-        .dark-theme #calendar {
-            background: var(--bg-dark);
-        }
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .calendar-header h3 {
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: var(--primary-light);
-        }
-        .dark-theme .calendar-header h3 {
-            color: var(--primary-dark);
-        }
-        .calendar-nav {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .calendar-nav i {
-            cursor: pointer;
-            color: var(--secondary-light);
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-        .dark-theme .calendar-nav i {
-            color: var(--secondary-dark);
-        }
-        .calendar-nav i:hover {
-            transform: scale(1.2);
-        }
-        .calendar-day {
-            padding: 0.5rem;
-            text-align: center;
-            font-size: 0.9rem;
-            min-height: 60px;
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .calendar-day.header {
-            font-weight: 500;
-            color: var(--primary-light);
-        }
-        .dark-theme .calendar-day.header {
-            color: var(--primary-dark);
-        }
-        .calendar-day.has-event {
-            background: var(--secondary-light);
-            color: var(--text-light);
-            border: 2px solid var(--primary-light);
-            border-radius: 8px;
-            opacity: 0.9;
-            cursor: pointer;
-        }
-        .dark-theme .calendar-day.has-event {
-            background: var(--secondary-dark);
-            border-color: var(--primary-dark);
-            color: var(--text-dark);
-        }
-        .calendar-day.has-event:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
-        }
-        .dark-theme .calendar-day.has-event:hover {
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
-        }
-        .calendar-day.today {
-            background: var(--primary-light);
-            color: #FFFFFF;
-            border-radius: 8px;
-        }
-        .dark-theme .calendar-day.today {
-            background: var(--primary-dark);
-            color: #FFFFFF;
-        }
-        .event-count {
-            background: var(--secondary-dark);
-            color: #FFFFFF;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            margin: 4px auto;
-            transition: transform 0.3s ease;
-        }
-        .dark-theme span{
-            color: var(--text-dark);
-        }
-        
-        .dark-theme p {
-            color: var(--text-dark);
-        }
-        
-        .dark-theme .event-count {
-            background: var(--secondary-light);
-        }
-        .event-count:hover {
-            transform: scale(1.2);
-            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.5);
-        }
-        .dark-theme .event-count:hover {
-            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.5);
-        }
-        .day-events-list li {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
-            transition: background 0.3s ease;
-        }
-        .dark-theme .day-events-list li {
-            border-bottom-color: rgba(217, 119, 6, 0.2);
-        }
-        .day-events-list li:hover {
-            background: rgba(251, 191, 36, 0.1);
-        }
-        .dark-theme .day-events-list li:hover {
-            background: rgba(217, 119, 6, 0.1);
-        }
-        .event-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .event-actions .icon-btn {
-            font-size: 1.1rem;
-            transition: transform 0.3s ease;
-        }
-        .event-actions .icon-btn:hover {
-            transform: scale(1.2) rotate(360deg);
-        }
-        .whatsapp-btn { color: var(--whatsapp); }
-        .whatsapp-btn:hover { color: var(--whatsapp-hover); }
-        .ok-btn { color: var(--secondary-light); }
-        .dark-theme .ok-btn { color: var(--secondary-dark); }
-        .ok-btn:hover { color: #F59E0B; animation: pulse 1s infinite; }
-        .dark-theme .ok-btn:hover { color: #B45309; }
-        .apply-btn { color: var(--text-light); }
-        .dark-theme .apply-btn { color: var(--text-dark); }
-        .apply-btn:hover { color: #374151; }
-        .dark-theme .apply-btn:hover { color: #9CA3AF; }
-        .maint-btn { color: var(--secondary-light); }
-        .dark-theme .maint-btn { color: var(--secondary-dark); }
-        .maint-btn:hover { color: #F59E0B; }
-        .dark-theme .maint-btn:hover { color: #B45309; }
-        .badge-application {
-            background: var(--secondary-light);
-            color: var(--text-light);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            transition: transform 0.3s ease;
-        }
-        .dark-theme .badge-application {
-            background: var(--secondary-dark);
-            color: var(--text-dark);
-        }
-        .badge-application:hover {
+        .btn-login:hover {
             transform: scale(1.05);
-            box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+            color: var(--text-light);
         }
-        .dark-theme .badge-application:hover {
-            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+        body.dark-theme .btn-login:hover {
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
+            color: var(--text-dark);
         }
-        .badge-maintenance {
-            background: var(--primary-light);
-            color: #FFFFFF;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            transition: transform 0.3s ease;
-        }
-        .dark-theme .badge-maintenance {
-            background: var(--primary-dark);
-        }
-        .badge-maintenance:hover {
-            transform: scale(1.05);
-            box-shadow: 0 2px 8px rgba(244, 114, 182, 0.3);
-        }
-        .dark-theme .badge-maintenance:hover {
-            box-shadow: 0 2px 8px rgba(109, 40, 217, 0.3);
-        }
-        @keyframes pulse {
-            0% { transform: scale(1.2); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1.2); }
-        }
-        .input-group-text {
-            background: rgba(243, 231, 247, 0.5);
-            border-color: var(--secondary-light);
-            color: var(--secondary-light);
-            border-radius: 12px 0 0 12px;
-        }
-        .dark-theme .input-group-text {
-            background: rgba(55, 65, 81, 0.5);
-            border-color: var(--secondary-dark);
-            color: var(--secondary-dark);
-        }
-        .table th {
-                    background: -webkit-linear-gradient(bottom left, var(--primary-light), #EC4899);
-                    background: -moz-linear-gradient(bottom left, var(--primary-light), #EC4899);
-                    background: -o-linear-gradient(bottom left, var(--primary-light), #EC4899);
-                    background: linear-gradient(to top right, var(--primary-light), #EC4899);
-                    color: #FFFFFF;
-                    font-weight: 500;
-                    border: none;
-                }
-        .dark-theme .table th {
-            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
-        }
-        .table th::after {
+        .btn-login::before {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
+            top: 0;
+            left: -100%;
             width: 100%;
-            height: 2px;
-            background: var(--secondary-light);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
         }
-        .dark-theme .table th::after {
-            background: var(--secondary-dark);
+        .btn-login:hover::before {
+            left: 100%;
         }
-        .table th:hover::after {
-            transform: scaleX(1);
+        .btn-login::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
-        .table tbody tr {
-            transition: background-color 0.3s ease;
-        }
-        .table tbody tr:hover {
-            background-color: rgba(244, 114, 182, 0.1);
-        }
-        .dark-theme .table tbody tr:hover {
-            background-color: rgba(109, 40, 217, 0.1);
-        }
-        .search-highlight {
-            background-color: rgba(251, 191, 36, 0.2) !important;
-            animation: highlightFade 2s forwards;
-        }
-        .dark-theme .search-highlight {
-            background-color: rgba(217, 119, 6, 0.2) !important;
-        }
-        @keyframes highlightFade {
-            from { background-color: rgba(251, 191, 36, 0.4); }
-            to { background-color: transparent; }
-        }
-        .whatsapp-icon {
-            color: var(--whatsapp);
-            font-size: 1.2rem;
-            margin-right: 5px;
-            transition: transform 0.3s ease;
-        }
-        .whatsapp-icon:hover {
-            transform: scale(1.2);
-        }
-        .dark-theme .whatsapp-icon {
-            color: var(--whatsapp);
-        }
-        .form-check-input:checked {
-            background-color: var(--primary-light);
-            border-color: var(--primary-light);
-        }
-        .dark-theme .form-check-input:checked {
-            background-color: var(--primary-dark);
-            border-color: var(--primary-dark);
-        }
-        .form-check-input:focus {
-            box-shadow: 0 0 0 0.25rem rgba(244, 114, 182, 0.25);
-        }
-        .dark-theme .form-check-input:focus {
-            box-shadow: 0 0 0 0.25rem rgba(109, 40, 217, 0.25);
-        }
-        .tab-link-custom {
-            color: var(--text-light);
-            border-color: transparent;
-            transition: all 0.3s ease;
-        }
-        .dark-theme .tab-link-custom {
-            color: var(--text-dark);
-        }
-        .tab-link-custom.active {
-            color: var(--primary-light);
-            border-bottom: 2px solid var(--primary-light);
-            background-color: transparent;
-        }
-        .dark-theme .tab-link-custom.active {
-            color: var(--primary-dark);
-            border-bottom-color: var(--primary-dark);
-        }
-        .tab-link-custom:hover {
-            color: var(--secondary-light);
-        }
-        .dark-theme .tab-link-custom:hover {
-            color: var(--secondary-dark);
-        }
-        #searchInput {
-            border-radius:  12px 0 0 12px;
-            max-width: 600px;
-        }
-        #searchInput:focus + .input-group-text .bi-search {
-            animation: heartbeat 1s infinite;
-            color: var(--secondary-light);
-        }
-        .dark-theme #searchInput:focus + .input-group-text .bi-search {
-            color: var(--secondary-dark);
-        }
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            20% { transform: scale(1.2); }
-            40% { transform: scale(1); }
-            60% { transform: scale(1.2); }
-            80% { transform: scale(1); }
+        .btn-login:active::after {
+            width: 300px;
+            height: 300px;
         }
         .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
             color: var(--secondary-light);
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, color 0.3s ease;
+            z-index: 10;
         }
-        .dark-theme .theme-toggle {
+        body.dark-theme .theme-toggle {
             color: var(--secondary-dark);
         }
         .theme-toggle:hover {
-            transform: rotate(360deg);
-        }
-        #currentDateTime {
-            font-size: 1.1rem;
-            color: var(--secondary-light);
-            font-weight: 500;
-        }
-        .dark-theme #currentDateTime {
-            color: var(--secondary-dark);
-        }
-        .modal-content {
-            border-radius: 24px;
-            background: var(--bg-light);
-            box-shadow: 0 8px 24px rgba(244, 114, 182, 0.4);
-        }
-        .dark-theme .modal-content {
-            background: var(--bg-dark);
-            box-shadow: 0 8px 24px rgba(109, 40, 217, 0.4);
-        }
-        .modal-header {
-            background: linear-gradient(45deg, var(--primary-light), #EC4899);
-            color: #FFFFFF;
-            border-radius: 24px 24px 0 0;
-        }
-        .dark-theme .modal-header {
-            background: linear-gradient(45deg, var(--primary-dark), #5B21B6);
-        }
-        .modal-footer {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            border: none;
-        }
-        .modal-footer button, .modal-footer a {
-            width: 100%;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-        }
-        .client-details-list li {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0.5rem 0;
-        }
-        .client-details-list li i {
-            color: var(--secondary-light);
-            font-size: 1.1rem;
-            animation: pulse 2s infinite;
-        }
-        .dark-theme .client-details-list li i {
-            color: var(--secondary-dark);
-        }
-        #newMaintenanceModal {
-            z-index: 1051;
-        }
-        #appointments-list .appointment-item {
-            background: var(--bg-light);
-            border: 1px solid var(--secondary-light);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-        .dark-theme #appointments-list .appointment-item {
-            background: var(--bg-dark);
-            border-color: var(--secondary-dark);
-        }
-        #appointments-list .appointment-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
-        }
-        .dark-theme #appointments-list .appointment-item:hover {
-            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
-        }
-        #appointments-list .appointment-item p {
-            margin: 0.3rem 0;
-            font-size: 0.95rem;
-        }
-        #appointments-list .appointment-item .badge {
-            font-size: 0.8rem;
-        }
-        /* Estilos para seções minimizadas em celular */
-        .collapsible-section {
-            transition: all 0.3s ease;
-        }
-        .collapsible-section.minimized .section-content {
-            display: none;
-        }
-        .collapsible-section.minimized h2 {
-            display: none;
-        }
-        .section-icons {
-            display: none;
-        }
-        @media (max-width: 768px) {
-            .container-main {
-                padding: 1rem;
-            }
-            .section-icons {
-                display: flex;
-                justify-content: space-around;
-                align-items: center;
-                margin-bottom: 1rem;
-            }
-            .section-icon {
-                font-size: 2rem;
-                color: var(--secondary-light);
-                cursor: pointer;
-                padding: 0.5rem;
-                transition: transform 0.3s ease, color 0.3s ease;
-            }
-            .dark-theme .section-icon {
-                color: var(--secondary-dark);
-            }
-            .section-icon:hover {
-                transform: scale(1.2);
-                color: var(--primary-light);
-            }
-            .dark-theme .section-icon:hover {
-                color: var(--primary-dark);
-            }
-            .collapsible-section {
-                margin-bottom: 0;
-            }
-            .collapsible-section.minimized {
-                display: none;
-            }
-            .collapsible-section.expanded {
-                display: block;
-            }
-            .calendar-day {
-                font-size: 0.7rem;
-                min-height: 60px;
-                padding: 0.3rem;
-            }
-            .event-count {
-                width: 16px;
-                height: 16px;
-                font-size: 0.6rem;
-            }
-            .day-events-list li {
-                font-size: 0.9rem;
-                padding: 0.5rem 0;
-            }
-            .navbar-brand {
-                font-size: 1.6rem;
-            }
-            .theme-toggle, .dropdown-toggle {
-                font-size: 1.5rem;
-            }
-            .badge-application, .badge-maintenance {
-                font-size: 0.7rem;
-            }
-            #currentDateTime {
-                font-size: 0.9rem;
-            }
-            .modal-footer {
-                grid-template-columns: 1fr 1fr;
-            }
-            .modal-footer button, .modal-footer a {
-                height: 60px;
-            }
-            #appointments-list .appointment-item {
-                padding: 0.8rem;
-            }
-            #appointments-list .appointment-item p {
-                font-size: 0.85rem;
-            }
-
-        }
-        #newMaintenanceModal, #clientDetailsModal, #cadastroModal, #rescheduleModal {
-            z-index: 3051;
-            padding: 0px;
-        }
-        /* Novo estilo para o Próximo Agendamento */
-        #next-appointment-card {
-            margin-top:20px;
-            border: 2px solid var(--primary-light);
-            box-shadow: 0 4px 16px rgba(244, 114, 182, 0.5);
-        }
-        .dark-theme #next-appointment-card {
-            border-color: var(--primary-dark);
-            box-shadow: 0 4px 16px rgba(109, 40, 217, 0.5);
-        }
-        #next-appointment-card .card-body {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        #next-appointment-info {
-            flex-grow: 1;
-        }
-        #next-appointment-card h3 {
+            transform: rotate(360deg) scale(1.1);
             color: var(--primary-light);
-            font-weight: 700;
         }
-        .dark-theme #next-appointment-card h3 {
+        body.dark-theme .theme-toggle:hover {
             color: var(--primary-dark);
         }
-        #next-appointment-card p {
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-        }
-        #reschedule-button {
-            margin-top: 1rem;
-            flex-shrink: 0;
-        }
-        /* Ajuste do grupo de pesquisa para acomodar o botão de cadastro */
-        #clients-search-group {
-            display: flex;
-            gap: 1rem;
-        }
-        #clients-search-input {
-            flex-grow: 1;
-        }
-        #clients-register-button {
-            flex-shrink: 0;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-        }
-        /* --- Novo Estilo para Clientes Vencidos --- */
-        #expired-clients-list {
-            border: 2px solid #DC2626; /* Vermelho/perigo */
-            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.5);
-        }
-        .dark-theme #expired-clients-list {
-            border-color: #EF4444; /* Vermelho mais claro no dark mode */
-            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
-        }
-        #expired-clients-list .card-body {
-            padding: 1.5rem;
-        }
-        .expired-client-item {
-            background: rgba(220, 38, 38, 0.05); /* Fundo sutilmente vermelho */
-            border-left: 5px solid #DC2626;
-            border-radius: 8px;
-            padding: 0.8rem;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-        .dark-theme .expired-client-item {
-            background: rgba(239, 68, 68, 0.1);
-            border-left-color: #EF4444;
-        }
-        .expired-client-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
-        }
-        .expired-client-info p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-        .expired-client-info strong {
-            color: #DC2626;
-        }
-        .dark-theme .expired-client-info strong {
-            color: #EF4444;
-        }
-        .btn-reagendar-expired {
-            background: #FBBF24; /* Cor secundária (laranja) */
-            border: none;
-            color: var(--text-light);
-            font-weight: 500;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .dark-theme .btn-reagendar-expired {
-            background: var(--secondary-dark); /* Cor secundária (laranja escuro) */
-            color: var(--text-dark);
-        }
-        .btn-reagendar-expired:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
-        }
-
-        /* Estilos para o Loading */
-        #loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-        }
-        .dark-theme #loading-overlay {
-            background: rgba(17, 24, 39, 0.9);
-        }
-        .spinner {
-            width: 80px;
-            height: 80px;
-            border: 8px solid var(--primary-light);
-            border-top-color: var(--secondary-light);
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid currentColor;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-        }
-        .dark-theme .spinner {
-            border-color: var(--primary-dark);
-            border-top-color: var(--secondary-dark);
+            margin-right: 0.5rem;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        /* Estilos para a div de Próximo Agendamento minimizável */
-        #next-appointment-card.minimized {
-            height: 60px; /* Altura menor quando minimizado */
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-            cursor: pointer;
-        }
-        #next-appointment-card.minimized .card-body {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            flex-wrap: nowrap;
-        }
-        #next-appointment-card.minimized #next-appointment-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        #next-appointment-card.minimized #next-appointment-details,
-        #next-appointment-card.minimized #reschedule-button {
-            display: none;
-        }
-        #next-appointment-card.minimized h3 {
-            margin-bottom: 0;
-            font-size: 1.2rem;
-        }
-        #next-appointment-card.minimized .toggle-icon {
-            display: block;
-            font-size: 1.5rem;
-            color: var(--primary-light);
-        }
-        .dark-theme #next-appointment-card.minimized .toggle-icon {
-            color: var(--primary-dark);
-        }
-        #next-appointment-card .toggle-icon {
-            display: none; /* Esconde o ícone de toggle por padrão */
-        }
-        #next-appointment-card.minimized .toggle-icon.bi-chevron-down {
-            display: block;
-        }
-        #next-appointment-card:not(.minimized) .toggle-icon.bi-chevron-up {
-            display: block;
-        }
-        #next-appointment-card:not(.minimized) .toggle-icon.bi-chevron-down {
-            display: none;
-        }
-
-        /* Estilos para os botões de navegação de agendamentos */
-        .appointment-navigation-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
+        .error-message {
+            color: #EF4444;
+            font-size: 0.9rem;
             margin-top: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
         }
-        .appointment-navigation-buttons button {
+        .error-message.show {
+            opacity: 1;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             background: var(--primary-light);
-            border: none;
             color: #FFFFFF;
-            font-weight: 500;
-            border-radius: 12px;
-            padding: 0.5rem 1rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 10px 20px;
+            border-radius: 6px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.5s ease forwards, slideOut 0.5s 2.5s forwards;
+            font-family: 'Poppins', sans-serif;
         }
-        .dark-theme .appointment-navigation-buttons button {
+        body.dark-theme .toast {
             background: var(--primary-dark);
         }
-        .appointment-navigation-buttons button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.5);
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateY(0); }
         }
-        .dark-theme .appointment-navigation-buttons button:hover {
-            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.5);
+        @keyframes slideOut {
+            to { opacity: 0; transform: translateY(20px); }
         }
-
+        .login-container.zoom-out {
+            animation: zoomOut 0.6s ease forwards;
+        }
+        @keyframes zoomOut {
+            0% { transform: scale(1); filter: blur(0); opacity: 1; }
+            100% { transform: scale(1.5); filter: blur(10px); opacity: 0; }
+        }
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            .login-header h1 {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-    </div>
+    <i id="themeToggle" class="bi bi-sun-fill theme-toggle" aria-label="Alternar tema"></i>
 
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Gerenciamento de Cílios</a>
-            <div class="d-flex align-items-center gap-2">                <div class="dropdown">
-                    <button class="dropdown-toggle" type="button" id="actionMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="actionMenu">
-                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal" id="nav-new-client-btn">Novo Cliente</a></li>
-                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#messageConfigModal">Configurar Mensagens</a></li>
-                        <li><a class="dropdown-item" href="https://lash-eta.vercel.app/galeria.html" target="_blank">
-    Galeria iLash
-</a></li>
-                    </ul>
-                </div>
-                <span id="currentDateTime"></span>
-                <i id="themeToggle" class="bi bi-sun-fill theme-toggle" aria-label="Alternar tema"></i>
-
-            </div>
+    <div class="login-container" data-aos="zoom-in" data-aos-delay="200">
+        <div class="login-header">
+            <h1>Bem-vinda!</h1>
+            <p>Acesse sua conta para gerenciar os agendamentos</p>
         </div>
-    </nav>
-    
-    <div class="container" style="max-width: 700px;">
-        <div id="next-appointment-card" class="card" data-aos="zoom-in">
-            <div class="card-body">
-                <div id="next-appointment-info">
-                    <h3>
-                        <i class="bi bi-star-fill"></i> Próximo Agendamento
-                        <i class="bi bi-chevron-down toggle-icon"></i>
-                        <i class="bi bi-chevron-up toggle-icon"></i>
-                    </h3>
-                    <div id="next-appointment-details">
-                        <p class="text-muted">Carregando...</p>
-                    </div>
-                </div>
-                <button id="reschedule-button" class="btn btn-secondary" style="display: none;" data-bs-toggle="modal" data-bs-target="#rescheduleModal" aria-label="Reagendar"><i class="bi bi-arrow-repeat"></i> Reagendar</button>
+        <form id="loginForm">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" name="username" placeholder="Usuário" required>
+                <label for="username">Login</label>
             </div>
-            <div class="appointment-navigation-buttons">
-                <button id="prev-appointment-btn" class="btn"><i class="bi bi-arrow-left"></i> Anterior</button>
-                <button id="next-appointment-btn" class="btn">Próximo <i class="bi bi-arrow-right"></i></button>
+            <div class="form-floating position-relative">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Senha" required>
+                <label for="password">Senha</label>
+                <button type="button" class="toggle-password" id="togglePassword">🙈</button>
             </div>
-        </div>
-    </div>
-    <div class="container-main">
-        <div class="section-icons">
-            
-            <i class="bi bi-calendar-check-fill section-icon" data-section="appointments-list"></i>
-            <i class="bi bi-calendar-week-fill section-icon" data-section="agenda"></i>
-            <i class="bi bi-people-fill section-icon" data-section="clients-list"></i>
-            <i class="bi bi-clock-history section-icon" data-section="expired-clients-list"></i>
-        </div>
-        
-        <div id="expired-clients-list" class="card collapsible-section" data-aos="fade-down">
-            <div class="card-body section-content">
-                <h2><i class="bi bi-clock-history"></i> Clientes Vencidos (Reagendar)</h2>
-                <ul id="expired-clients-list-body" class="list-unstyled">
-                    </ul>
-            </div>
-        </div>
-
-        <div id="appointments-list" class="card collapsible-section" data-aos="fade-up">
-            <div class="card-body section-content">
-                <h2><i  class="bi bi-calendar-check-fill"></i> Lista de Agendamentos</h2>
-                <ul id="appointments-list-body" class="list-unstyled"></ul>
-            </div>
-        </div>
-        <div id="agenda" class="card collapsible-section" data-aos="fade-up">
-            <div class="card-body section-content">
-                <h2><i class="bi bi-calendar-week-fill"></i> Agenda de Manutenções</h2>
-                <div class="calendar-header">
-                    <h3 id="calendarTitle"></h3>
-                    <div class="calendar-nav">
-                        <i class="bi bi-chevron-left" id="prevMonth"></i>
-                        <i class="bi bi-chevron-right" id="nextMonth"></i>
-                    </div>
-                </div>
-                <div id="calendar"></div>
-            </div>
-        </div>
-        <div id="clients-list" class="card collapsible-section" data-aos="fade-up">
-            <div class="card-body section-content">
-                <h2><i class="bi bi-people-fill"></i> Clientes Cadastrados</h2>
-                <div class="mb-3">
-                    <div id="clients-search-group" style="max-width: 900px;">
-                        <div class="input-group" id="clients-search-input">
-                            <span class="input-group-text"><i class="bi bi-search"></i></span>
-                            <input type="text" class="form-control" id="searchInput" placeholder="Pesquisar..." aria-label="Pesquisar clientes">
-                        </div>
-                        <button id="clients-register-button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#cadastroModal">
-                            <i class="bi bi-person-plus-fill"></i> Cadastrar
-                        </button>
-                    </div>
-                    </div>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>WhatsApp</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clients-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cadastroModalLabel">Cadastrar Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="cadastroForm">
-                        <input type="hidden" id="editId" name="editId">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nome:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                <input type="text" class="form-control" id="name" name="name" required aria-label="Nome do cliente">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="whatsapp" class="form-label">WhatsApp:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-whatsapp"></i></span>
-                                <input type="text" class="form-control" id="whatsapp" name="whatsapp" required aria-label="Número do WhatsApp">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="appointment_type" class="form-label">Tipo de Agendamento:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
-                                <select class="form-control" id="appointment_type" name="appointment_type" required aria-label="Tipo de agendamento">
-                                    <option value="application">Aplicação</option>
-                                    <option value="maintenance">Manutenção</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="appointment_date" class="form-label" id="appointment_date_label">Data do Agendamento:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-calendar-date-fill"></i></span>
-                                <input type="date" class="form-control" id="appointment_date" name="appointment_date" required aria-label="Data do agendamento">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="appointment_time" class="form-label" id="appointment_time_label">Horário do Agendamento:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="appointment_time" name="appointment_time" min="00:01" max="23:59" required aria-label="Horário do agendamento">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="application_value" class="form-label">Valor da Aplicação:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
-                                <input type="number" class="form-control" id="application_value" name="application_value" step="0.01" min="0" required aria-label="Valor da aplicação">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="maintenance_value" class="form-label">Valor da Manutenção:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
-                                <input type="number" class="form-control" id="maintenance_value" name="maintenance_value" step="0.01" min="0" required aria-label="Valor da manutenção">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="eyelash_model" class="form-label">Modelo do Cílios:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-eye-fill"></i></span>
-                                <select class="form-control" id="eyelash_model" name="eyelash_model" required aria-label="Modelo do cílios">
-                                    <option value="">Selecione o modelo</option>
-                                    <option value="brasileiro">Brasileiro</option>
-                                    <option value="egipcio">Egípcio</option>
-                                    <option value="4d">4D</option>
-                                    <option value="5d">5D</option>
-                                    <option value="fio_a_fio">Fio a Fio</option>
-                                    <option value="fox">Fox</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" aria-label="Salvar cliente"><i class="bi bi-save-fill"></i> Salvar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="messageConfigModal" tabindex="-1" aria-labelledby="messageConfigModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="messageConfigModalLabel">Configurar Mensagens do WhatsApp</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul class="nav nav-tabs" id="messageTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="application-tab" data-bs-toggle="tab" data-bs-target="#application" type="button" role="tab" aria-controls="application" aria-selected="true">Aplicação</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="maintenance-tab" data-bs-toggle="tab" data-bs-target="#maintenance" type="button" role="tab" aria-controls="maintenance" aria-selected="false">Manutenção</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="messageTabContent">
-                        <div class="tab-pane fade show active" id="application" role="tabpanel" aria-labelledby="application-tab">
-                            <form id="applicationMessageForm" class="mt-3">
-                                <div class="mb-3">
-                                    <label for="applicationMessageTemplate" class="form-label">Modelo da Mensagem de Aplicação:</label>
-                                    <textarea class="form-control" id="applicationMessageTemplate" name="applicationMessageTemplate" rows="5" required aria-label="Template de mensagem de aplicação"></textarea>
-                                    <small class="form-text text-muted">Use as variáveis: {nome}, {data_agendamento}, {hora_agendamento}, {valor_aplicacao}, {valor_manutencao}</small>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary" aria-label="Salvar template de aplicação"><i class="bi bi-save-fill"></i> Salvar</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="tab-pane fade" id="maintenance" role="tabpanel" aria-labelledby="maintenance-tab">
-                            <form id="maintenanceMessageForm" class="mt-3">
-                                <div class="mb-3">
-                                    <label for="maintenanceMessageTemplate" class="form-label">Modelo da Mensagem de Manutenção:</label>
-                                    <textarea class="form-control" id="maintenanceMessageTemplate" name="maintenanceMessageTemplate" rows="5" required aria-label="Template de mensagem de manutenção"></textarea>
-                                    <small class="form-text text-muted">Use as variáveis: {nome}, {data_agendamento}, {hora_agendamento}, {valor_aplicacao}, {valor_manutencao}</small>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary" aria-label="Salvar template de manutenção"><i class="bi bi-save-fill"></i> Salvar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="newMaintenanceModal" tabindex="-1" aria-labelledby="newMaintenanceModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="newMaintenanceModalLabel">Agendar Nova Manutenção</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="newMaintenanceForm">
-                        <input type="hidden" id="maintenanceId" name="maintenanceId">
-                        <div class="mb-3">
-                            <label for="new_maintenance_date" class="form-label">Data da Manutenção:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
-                                <input type="date" class="form-control" id="new_maintenance_date" name="new_maintenance_date" required aria-label="Nova data da manutenção">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="new_maintenance_time" class="form-label">Horário da Manutenção:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="new_maintenance_time" name="new_maintenance_time" min="00:01" max="23:59" required aria-label="Novo horário da manutenção">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="new_maintenance_value" class="form-label">Valor da Manutenção:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-currency-exchange"></i></span>
-                                <input type="number" class="form-control" id="new_maintenance_value" name="new_maintenance_value" step="0.01" min="0" required aria-label="Novo valor da manutenção">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="new_eyelash_model" class="form-label">Modelo do Cílios:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-eye-fill"></i></span>
-                                <select class="form-control" id="new_eyelash_model" name="new_eyelash_model" required aria-label="Novo modelo do cílios">
-                                    <option value="">Selecione o modelo</option>
-                                    <option value="brasileiro">Brasileiro</option>
-                                    <option value="egipcio">Egípcio</option>
-                                    <option value="4d">4D</option>
-                                    <option value="5d">5D</option>
-                                    <option value="fio_a_fio">Fio a Fio</option>
-                                    <option value="fox">Fox</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" aria-label="Salvar nova manutenção"><i class="bi bi-save-fill"></i> Salvar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="rescheduleModalLabel">Reagendar Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="rescheduleForm">
-                        <input type="hidden" id="rescheduleClientId" name="rescheduleClientId">
-                        <p class="mb-3">Reagendando: <strong id="rescheduleClientName"></strong></p>
-                        <div class="mb-3">
-                            <label for="reschedule_date" class="form-label">Nova Data:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-calendar-event-fill"></i></span>
-                                <input type="date" class="form-control" id="reschedule_date" name="reschedule_date" required aria-label="Nova data do agendamento">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="reschedule_time" class="form-label">Novo Horário:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-clock-fill"></i></span>
-                                <input type="time" class="form-control" id="reschedule_time" name="reschedule_time" min="00:01" max="23:59" required aria-label="Novo horário do agendamento">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" aria-label="Salvar reagendamento"><i class="bi bi-save-fill"></i> Salvar Reagendamento</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="clientDetailsModal" tabindex="-1" aria-labelledby="clientDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="clientDetailsModalLabel">Detalhes do Cliente</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul class="client-details-list" id="client-details-list"></ul>
-                    <div class="modal-footer">
-                        <a id="whatsappApplicationLink" href="#" target="_blank" class="btn btn-primary" aria-label="Enviar mensagem de aplicação"><i class="bi bi-calendar-check"></i> Aplicação</a>
-                        <a id="whatsappMaintenanceLink" href="#" target="_blank" class="btn btn-primary" aria-label="Enviar mensagem de manutenção"><i class="bi bi-wrench-adjustable"></i> Manutenção</a>
-                        <button id="editClientButton" class="btn btn-primary" aria-label="Editar cliente"><i class="bi bi-pencil-square"></i> Editar</button>
-                        <button id="deleteClientButton" class="btn btn-danger" aria-label="Excluir cliente"><i class="bi bi-trash-fill"></i> | Excluir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="dayEventsModal" tabindex="-1" aria-labelledby="dayEventsModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="dayEventsModalLabel">Eventos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul class="day-events-list" id="day-events-list"></ul>
-                </div>
-            </div>
-        </div>
+            <button type="submit" class="btn btn-login">
+                <span class="loading-spinner" id="loginSpinner"></span>
+                Entrar
+            </button>
+        </form>
+        <p id="errorMessage" class="error-message">Login ou senha inválidos.</p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script>
-        const API_CLIENTS = 'https://683d14e6199a0039e9e427bd.mockapi.io/Dados';
+        // Inicialização do AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
 
-        const eyelashModels = {
-            brasileiro: 'Brasileiro',
-            egipcio: 'Egípcio',
-            '4d': '4D',
-            '5d': '5D',
-            fio_a_fio: 'Fio a Fio',
-            fox: 'Fox'
-        };
+        // Toggle de tema
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            this.classList.toggle('bi-sun-fill', !isDark);
+            this.classList.toggle('bi-moon-stars-fill', isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
 
-       const defaultApplicationMessageTemplate = `💖 *Lembrete de agendamento*\n\nOlá {nome}, tudo bem?\n\n✨ Sua aplicação de cílios está agendada para *{data_agendamento}*.\n\nConfira os detalhes abaixo:\n\n⏰ Horário: {hora_agendamento}\n💸 Valor: {valor_aplicacao}\n\n📌 *Endereço:* *Oreste Mazzoni, 169 - CECAP II*\n\n👇🏽 Localização\nhttps://maps.app.goo.gl/SV38kBHxpeoVKhV58\n\n📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.\n\n📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.\n\nEm caso de dúvidas ou imprevistos, é só me chamar! 💬\nAgradeço pela confiança 💕\n\nPara sua comodidade acesse\nhttps://lash-eta.vercel.app/login.html`;
-
-        const defaultMaintenanceMessageTemplate = `💖 *Lembrete de agendamento*\n\nOlá {nome}, tudo bem?\n\n✨ Sua manutenção de cílios está agendada para *{data_agendamento}*.\n\nConfira os detalhes abaixo:\n\n⏰ Horário: {hora_agendamento}\n💸 Valor: {valor_manutencao}\n\n📌 Em caso de atraso, por favor avise com pelo menos 2 horas de antecedência.\n\n📌 Se houver necessidade de remarcar, peço que avise com no mínimo 1 dia de antecedência.\n\nEm caso de dúvidas ou imprevistos, é só me chamar! 💬\nAgradeço pela confiança 💕`;
-
-        let currentDate = new Date();
-        let allFutureAppointments = []; // Armazena todos os agendamentos futuros ordenados
-        let currentAppointmentIndex = 0; // Índice do agendamento atual sendo exibido
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            const [year, month, day] = dateStr.split('-');
-            return `${day}/${month}/${year}`;
+        // Carrega tema salvo
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.getElementById('themeToggle').classList.remove('bi-sun-fill');
+            document.getElementById('themeToggle').classList.add('bi-moon-stars-fill');
         }
 
-        function formatTime(timeStr) {
-            if (!timeStr) return '';
-            const [hours, minutes] = timeStr.split(':');
-            return `${hours}:${minutes}`;
+        // Mostrar/ocultar senha
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            togglePassword.textContent = isPassword ? '👀' : '🙈';
+        });
+        passwordInput.addEventListener('input', () => {
+            togglePassword.classList.toggle('visible', passwordInput.value.length > 0);
+        });
+
+        // Hash SHA256
+        async function sha256(str) {
+            const msgBuffer = new TextEncoder().encode(str);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        function getDayOfWeek(dateStr) {
-            if (!dateStr) return '';
-            const [year, month, day] = dateStr.split('-');
-            // Cuidado: os meses em JS são 0-indexados, por isso o -1
-            const date = new Date(year, month - 1, day); 
-            // O getDay() retorna o dia da semana: 0 para Domingo, 1 para Segunda, etc.
-            const days = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-            return days[date.getDay()];
+        // Toast
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        function updateDateTime() {
-            const now = new Date();
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const year = now.getFullYear();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('currentDateTime').textContent = `${day}/${month}/${year} ${hours}:${minutes}`;
+        // Logout automático se já estiver logado
+        if (localStorage.getItem('authenticated') === 'true') {
+            localStorage.removeItem('authenticated');
+            showToast("Sessão anterior encerrada.");
         }
 
-        function toggleTheme() {
-            const body = document.body;
-            const themeToggle = document.getElementById('themeToggle');
-            if (body.classList.contains('dark-theme')) {
-                body.classList.remove('dark-theme');
-                themeToggle.classList.remove('bi-moon-stars-fill');
-                themeToggle.classList.add('bi-sun-fill');
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.classList.add('dark-theme');
-                themeToggle.classList.remove('bi-sun-fill');
-                themeToggle.classList.add('bi-moon-stars-fill');
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        function updateAppointmentLabels() {
-            const type = document.getElementById('appointment_type').value;
-            const dateLabel = document.getElementById('appointment_date_label');
-            const timeLabel = document.getElementById('appointment_time_label');
-            if (type === 'application') {
-                dateLabel.textContent = 'Data da Aplicação';
-                timeLabel.textContent = 'Horário da Aplicação';
-            } else if (type === 'maintenance') {
-                dateLabel.textContent = 'Data da Manutenção';
-                timeLabel.textContent = 'Horário da Manutenção';
-            } else {
-                dateLabel.textContent = 'Data do Agendamento';
-                timeLabel.textContent = 'Horário do Agendamento';
-            }
-        }
-
-        async function getClients() {
-            try {
-                const response = await fetch(API_CLIENTS);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error('Erro ao buscar clientes:', error);
-                return [];
-            }
-        }
-
-        async function saveClients(client, isEdit = false) {
-            try {
-                const method = isEdit ? 'PUT' : 'POST';
-                const url = isEdit ? `${API_CLIENTS}/${client.id}` : API_CLIENTS;
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(client),
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error('Erro ao salvar cliente:', error);
-                alert('Erro ao salvar cliente. Verifique o console para mais detalhes.');
-                return null;
-            }
-        }
-
-        async function deleteClient(id) {
-            if (!confirm('Tem certeza que deseja excluir este cliente?')) {
-                return;
-            }
-            try {
-                const response = await fetch(`${API_CLIENTS}/${id}`, {
-                    method: 'DELETE',
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                alert('Cliente excluído com sucesso!');
-                bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
-                await updateAllData();
-            } catch (error) {
-                console.error('Erro ao excluir cliente:', error);
-                alert('Erro ao excluir cliente. Verifique o console para mais detalhes.');
-            }
-        }
-
-        async function showClientDetails(id) {
-            const clients = await getClients();
-            const client = clients.find(c => c.id === id);
-            if (!client) {
-                alert('Cliente não encontrado.');
-                return;
-            }
-
-            const clientDetailsList = document.getElementById('client-details-list');
-            clientDetailsList.innerHTML = `
-                <li><i class="bi bi-person-fill"></i> <strong>Nome:</strong> ${client.name}</li>
-                <li><i class="bi bi-whatsapp"></i> <strong>WhatsApp:</strong> ${client.whatsapp}</li>
-                <li><i class="bi bi-calendar-event-fill"></i> <strong>Agendamento:</strong> ${formatDate(client.appointment_date)} às ${formatTime(client.appointment_time)}</li>
-                <li><i class="bi bi-tag-fill"></i> <strong>Tipo:</strong> ${client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção'}</li>
-                <li><i class="bi bi-currency-dollar"></i> <strong>Valor Aplicação:</strong> R$ ${parseFloat(client.application_value).toFixed(2).replace('.', ',')}</li>
-                <li><i class="bi bi-currency-dollar"></i> <strong>Valor Manutenção:</strong> R$ ${parseFloat(client.maintenance_value).toFixed(2).replace('.', ',')}</li>
-                <li><i class="bi bi-eye-fill"></i> <strong>Modelo Cílios:</strong> ${eyelashModels[client.eyelash_model] || client.eyelash_model}</li>
-            `;
-
-            document.getElementById('editClientButton').onclick = () => editClient(client.id);
-            document.getElementById('deleteClientButton').onclick = () => deleteClient(client.id);
-            document.getElementById('whatsappApplicationLink').href = generateWhatsAppLink(client, 'application');
-            document.getElementById('whatsappMaintenanceLink').href = generateWhatsAppLink(client, 'maintenance');
-
-            bootstrap.Modal.getOrCreateInstance(document.getElementById('clientDetailsModal')).show();
-        }
-
-        function generateWhatsAppLink(client, type) {
-            const template = type === 'application' 
-                ? localStorage.getItem('applicationMessageTemplate') || defaultApplicationMessageTemplate
-                : localStorage.getItem('maintenanceMessageTemplate') || defaultMaintenanceMessageTemplate;
-
-            const message = template
-                .replace(/{nome}/g, client.name)
-                .replace(/{data_agendamento}/g, formatDate(client.appointment_date))
-                .replace(/{hora_agendamento}/g, formatTime(client.appointment_time))
-                .replace(/{valor_aplicacao}/g, `R$ ${parseFloat(client.application_value).toFixed(2).replace('.', ',')}`)
-                .replace(/{valor_manutencao}/g, `R$ ${parseFloat(client.maintenance_value).toFixed(2).replace('.', ',')}`);
-
-            return `https://api.whatsapp.com/send?phone=${client.whatsapp}&text=${encodeURIComponent(message)}`;
-        }
-
-        function openWhatsAppLink(id) {
-            getClients().then(clients => {
-                const client = clients.find(c => c.id === id);
-                if (client) {
-                    const link = generateWhatsAppLink(client, client.appointment_type); // Usa o tipo de agendamento do cliente
-                    window.open(link, '_blank');
-                } else {
-                    alert('Cliente não encontrado.');
-                }
-            });
-        }
-
-        function validateForm(client) {
-            if (new Date(`${client.appointment_date}T${client.appointment_time}`) < new Date()) {
-                alert('A data e hora do agendamento não podem ser no passado.');
-                return false;
-            }
-            return true;
-        }
-
-        function validateRescheduleForm(reschedule) {
-            if (new Date(`${reschedule.reschedule_date}T${reschedule.reschedule_time}`) < new Date()) {
-                alert('A nova data e hora do agendamento não podem ser no passado.');
-                return false;
-            }
-            return true;
-        }
-
-        function validateMaintenanceForm(maintenance) {
-            if (new Date(`${maintenance.new_maintenance_date}T${maintenance.new_maintenance_time}`) < new Date()) {
-                alert('A data e hora da manutenção não podem ser no passado.');
-                return false;
-            }
-            return true;
-        }
-
-        async function updateAppointmentsList() {
-            const clients = await getClients();
-            const listBody = document.getElementById('appointments-list-body');
-            listBody.innerHTML = '';
-
-            const now = new Date();
-            const nowDateTime = now.getTime();
-
-            const sortedClients = clients
-                .filter(client => {
-                    const appointmentDateTime = new Date(`${client.appointment_date}T${client.appointment_time}`);
-                    return appointmentDateTime.getTime() >= nowDateTime;
-                })
-                .sort((a, b) => {
-                    const dateTimeA = new Date(`${a.appointment_date}T${a.appointment_time}`);
-                    const dateTimeB = new Date(`${b.appointment_date}T${b.appointment_time}`);
-                    return dateTimeA - dateTimeB;
-                });
-
-            sortedClients.forEach((client, idx) => {
-                const li = document.createElement('li');
-                li.className = 'appointment-item';
-                li.setAttribute('data-aos', 'fade-up');
-                li.setAttribute('data-aos-delay', idx * 50); // Reduzindo o delay para listas maiores
-                const badgeClass = client.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
-                const badgeText = client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
-                li.innerHTML = `
-                    <p><strong>${client.name}</strong></p>
-                    <p>${getDayOfWeek(client.appointment_date)} - ${formatDate(client.appointment_date)} - ${formatTime(client.appointment_time)}</p>
-                    <p><span class="${badgeClass}">${badgeText}</span></p>
-                `;
-                li.onclick = () => showClientDetails(client.id);
-                listBody.appendChild(li);
-            });
-            // Se não houver agendamentos futuros
-            if (sortedClients.length === 0) {
-                listBody.innerHTML = '<li class="p-3 text-center text-muted">Não há agendamentos futuros.</li>';
-            }
-        }
-
-        async function updateClientsTable(searchTerm = '') {
-            const clients = await getClients();
-            const tbody = document.getElementById('clients-table-body');
-            tbody.innerHTML = '';
-            let filteredClients = clients.map(client => ({ ...client }));
-            
-            if (searchTerm) {
-                const lowerSearchTerm = searchTerm.toLowerCase();
-                filteredClients = filteredClients.filter(client => 
-                    client.name.toLowerCase().includes(lowerSearchTerm) ||
-                    client.whatsapp.toLowerCase().includes(lowerSearchTerm) ||
-                    formatDate(client.appointment_date).includes(lowerSearchTerm)
-                );
-            }
-
-            filteredClients.forEach((client, idx) => {
-                const row = document.createElement('tr');
-                const isHighlighted = searchTerm && (
-                    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    client.whatsapp.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    formatDate(client.appointment_date).includes(searchTerm.toLowerCase())
-                );
-                if (isHighlighted) row.classList.add('search-highlight');
-                row.setAttribute('data-aos', 'fade-up');
-                row.setAttribute('data-aos-delay', idx * 100);
-                row.innerHTML = `
-                    <td onclick="showClientDetails('${client.id}')" style="cursor: pointer;"><i class="bi bi-person-fill"></i> ${client.name}</td>
-                    <td onclick="openWhatsAppLink('${client.id}')" style="cursor: pointer;"><i class="fa-brands fa-whatsapp whatsapp-icon"></i> ${client.whatsapp}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        async function updateCalendar() {
-            const clients = await getClients();
-            const calendar = document.getElementById('calendar');
-            const calendarTitle = document.getElementById('calendarTitle');
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const today = new Date();
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
-            const startDay = firstDay.getDay(); // 0 (Dom) to 6 (Sáb)
-            const daysInMonth = lastDay.getDate();
-
-            calendarTitle.textContent = `${firstDay.toLocaleString('pt-BR', { month: 'long' })} ${year}`;
-            calendar.innerHTML = `
-                <div class="calendar-day header">Dom</div>
-                <div class="calendar-day header">Seg</div>
-                <div class="calendar-day header">Ter</div>
-                <div class="calendar-day header">Qua</div>
-                <div class="calendar-day header">Qui</div>
-                <div class="calendar-day header">Sex</div>
-                <div class="calendar-day header">Sáb</div>
-            `;
-
-            for (let i = 0; i < startDay; i++) {
-                calendar.innerHTML += `<div class="calendar-day"></div>`;
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const events = clients.filter(client => client.appointment_date === dateStr);
-                const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
-                const hasEvent = events.length > 0;
-                const eventHTML = hasEvent ? `<div class="event-count">${events.length}</div>` : '';
-                calendar.innerHTML += `
-                    <div class="calendar-day ${isToday ? 'today' : ''} ${hasEvent ? 'has-event' : ''}" ${hasEvent ? `onclick="showDayEvents('${dateStr}')"` : ''}>
-                        <span>${day}</span>
-                        ${eventHTML}
-                    </div>
-                `;
-            }
-        }
-
-        async function showDayEvents(dateStr) {
-            const clients = await getClients();
-            const dayEventsList = document.getElementById('day-events-list');
-            dayEventsList.innerHTML = '';
-
-            const events = clients.filter(client => client.appointment_date === dateStr)
-                .sort((a, b) => {
-                    const timeA = a.appointment_time;
-                    const timeB = b.appointment_time;
-                    return timeA.localeCompare(timeB);
-                });
-
-            if (events.length > 0) {
-                events.forEach(event => {
-                    const li = document.createElement('li');
-                    const badgeClass = event.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
-                    const badgeText = event.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
-                    li.innerHTML = `
-                        <div>
-                            <p><strong>${event.name}</strong> - ${formatTime(event.appointment_time)}</p>
-                            <p><span class="${badgeClass}">${badgeText}</span></p>
-                        </div>
-                        <div class="event-actions">
-                            <i class="bi bi-info-circle-fill icon-btn ok-btn" onclick="showClientDetails('${event.id}')"></i>
-                            <i class="bi bi-whatsapp icon-btn whatsapp-btn" onclick="openWhatsAppLink('${event.id}')"></i>
-                            <i class="bi bi-pencil-square icon-btn apply-btn" onclick="editClient('${event.id}')"></i>
-                            <i class="bi bi-wrench-adjustable-fill icon-btn maint-btn" onclick="openNewMaintenance('${event.id}')"></i>
-                        </div>
-                    `;
-                    dayEventsList.appendChild(li);
-                });
-            } else {
-                dayEventsList.innerHTML = '<li class="p-3 text-center text-muted">Nenhum agendamento para este dia.</li>';
-            }
-
-            bootstrap.Modal.getOrCreateInstance(document.getElementById('dayEventsModal')).show();
-        }
-
-        async function updateNextAppointment(index = 0) {
-            const clients = await getClients();
-            const now = new Date();
-            const nowDateTime = now.getTime();
-            
-            // Filtra apenas agendamentos futuros e ordena
-            allFutureAppointments = clients.filter(client => {
-                const appointmentDateTime = new Date(`${client.appointment_date}T${client.appointment_time}`);
-                return appointmentDateTime.getTime() >= nowDateTime;
-            }).sort((a, b) => {
-                const dateTimeA = new Date(`${a.appointment_date}T${a.appointment_time}`);
-                const dateTimeB = new Date(`${b.appointment_date}T${b.appointment_time}`);
-                return dateTimeA - dateTimeB;
-            });
-
-            const nextAppointmentDetailsDiv = document.getElementById('next-appointment-details');
-            const rescheduleButton = document.getElementById('reschedule-button');
-            const prevBtn = document.getElementById('prev-appointment-btn');
-            const nextBtn = document.getElementById('next-appointment-btn');
-
-            if (allFutureAppointments.length > 0) {
-                currentAppointmentIndex = index;
-                const nextClient = allFutureAppointments[currentAppointmentIndex];
-
-                const type = nextClient.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
-                const badgeClass = nextClient.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
-                const dateText = getDayOfWeek(nextClient.appointment_date) === getDayOfWeek(now.toISOString().split('T')[0]) 
-                    ? 'Hoje' : `${getDayOfWeek(nextClient.appointment_date)}, ${formatDate(nextClient.appointment_date)}`;
-                
-                nextAppointmentDetailsDiv.innerHTML = `
-                    <p><strong>Cliente:</strong> <span onclick="showClientDetails('${nextClient.id}')" style="cursor: pointer; text-decoration: underline;">${nextClient.name}</span></p>
-                    <p><strong>Horário:</strong> ${formatTime(nextClient.appointment_time)}</p>
-                    <p><strong>Data:</strong> ${dateText}</p>
-                    <p><strong>Tipo:</strong> <span class="${badgeClass}">${type}</span></p>
-                `;
-                rescheduleButton.style.display = 'block';
-                rescheduleButton.onclick = () => openRescheduleModal(nextClient); // Define o handler para o modal
-
-                // Habilita/desabilita botões de navegação
-                prevBtn.disabled = currentAppointmentIndex === 0;
-                nextBtn.disabled = currentAppointmentIndex === allFutureAppointments.length - 1;
-            } else {
-                nextAppointmentDetailsDiv.innerHTML = '<p class="text-muted">Nenhum agendamento futuro encontrado.</p>';
-                rescheduleButton.style.display = 'none';
-                prevBtn.disabled = true;
-                nextBtn.disabled = true;
-            }
-        }
-
-        // Novo: Função para abrir o modal de reagendamento
-        function openRescheduleModal(client) {
-            document.getElementById('rescheduleClientId').value = client.id;
-            document.getElementById('rescheduleClientName').textContent = client.name;
-            // Preenche a data e hora atuais para facilitar
-            document.getElementById('reschedule_date').value = client.appointment_date;
-            document.getElementById('reschedule_time').value = client.appointment_time;
-            bootstrap.Modal.getOrCreateInstance(document.getElementById('rescheduleModal')).show();
-        }
-
-        async function editClient(id) {
-            const clients = await getClients();
-            const client = clients.find(c => c.id === id);
-            if (!client) {
-                alert('Cliente não encontrado.');
-                return;
-            }
-            const modal = document.getElementById('cadastroModal');
-            const modalTitle = document.getElementById('cadastroModalLabel');
-            modalTitle.textContent = 'Editar Cliente';
-            document.getElementById('editId').value = id;
-            document.getElementById('name').value = client.name;
-            document.getElementById('whatsapp').value = client.whatsapp;
-            document.getElementById('appointment_type').value = client.appointment_type;
-            document.getElementById('appointment_date').value = client.appointment_date;
-            document.getElementById('appointment_time').value = client.appointment_time;
-            document.getElementById('application_value').value = client.application_value;
-            document.getElementById('maintenance_value').value = client.maintenance_value;
-            document.getElementById('eyelash_model').value = client.eyelash_model;
-            updateAppointmentLabels();
-            bootstrap.Modal.getOrCreateInstance(modal).show();
-            bootstrap.Modal.getInstance(document.getElementById('clientDetailsModal')).hide();
-        }
-
-        async function openNewMaintenance(id) {
-            const modal = document.getElementById('newMaintenanceModal');
-            document.getElementById('maintenanceId').value = id;
-            document.getElementById('new_maintenance_date').value = '';
-            document.getElementById('new_maintenance_time').value = '';
-            document.getElementById('new_maintenance_value').value = '';
-            document.getElementById('new_eyelash_model').value = '';
-            bootstrap.Modal.getOrCreateInstance(modal).show();
-        }
-
-        function searchClients() {
-            const searchInput = document.getElementById('searchInput').value;
-            updateClientsTable(searchInput);
-        }
-
-        function toggleSection(sectionId) {
-            // ATUALIZADO: Inclui a nova seção 'expired-clients-list'
-            const sections = ['appointments-list','expired-clients-list',  'agenda', 'clients-list']; 
-            sections.forEach(id => {
-                const section = document.getElementById(id);
-                if (id === sectionId) {
-                    // Se o usuário clicar na seção ativa, minimiza
-                    if(section.classList.contains('expanded')) {
-                        section.classList.remove('expanded');
-                        section.classList.add('minimized');
-                    } else {
-                        section.classList.remove('minimized');
-                        section.classList.add('expanded');
-                    }
-                } else {
-                    section.classList.add('minimized');
-                    section.classList.remove('expanded');
-                }
-            });
-        }
-
-        async function updateExpiredClientsList() {
-            const clients = await getClients();
-            const listBody = document.getElementById('expired-clients-list-body');
-            listBody.innerHTML = '';
-
-            const now = new Date();
-            const nowDateTime = now.getTime();
-
-            const expiredClients = clients.filter(client => {
-                const appointmentDateTime = new Date(`${client.appointment_date}T${client.appointment_time}`);
-                // Considera vencido se a data do agendamento for anterior à data atual
-                return appointmentDateTime.getTime() < nowDateTime;
-            }).sort((a, b) => {
-                // Ordena os vencidos do mais antigo para o mais recente
-                const dateTimeA = new Date(`${a.appointment_date}T${a.appointment_time}`);
-                const dateTimeB = new Date(`${b.appointment_date}T${b.appointment_time}`);
-                return dateTimeA - dateTimeB;
-            });
-
-            if (expiredClients.length > 0) {
-                expiredClients.forEach(client => {
-                    const li = document.createElement('li');
-                    li.className = 'expired-client-item';
-                    li.innerHTML = `
-                        <div class="expired-client-info">
-                            <p><strong>${client.name}</strong></p>
-                            <p>${formatDate(client.appointment_date)} - ${formatTime(client.appointment_time)}</p>
-                        </div>
-                        <button class="btn btn-reagendar-expired" onclick="openRescheduleModal(${client.id})">
-                            <i class="bi bi-arrow-repeat"></i> Reagendar
-                        </button>
-                    `;
-                    listBody.appendChild(li);
-                });
-            } else {
-                listBody.innerHTML = '<li class="p-3 text-center text-muted">Nenhum cliente com agendamento vencido.</li>';
-            }
-        }
-
-        document.getElementById('cadastroForm').addEventListener('submit', async function(e) {
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const formData = new FormData(this);
-            const client = {};
-            for (let [key, value] of formData.entries()) {
-                client[key] = value;
-            }
-            if (!validateForm(client)) return;
-            const isEdit = !!client.editId;
-            if (isEdit) client.id = client.editId;
-            delete client.editId;
-            const savedClient = await saveClients(client, isEdit);
-            if (savedClient) {
-                await updateAllData();
-                this.reset();
-                document.getElementById('editId').value = '';
-                document.getElementById('cadastroModalLabel').textContent = 'Cadastrar Cliente';
-                updateAppointmentLabels();
-                bootstrap.Modal.getInstance(document.getElementById('cadastroModal')).hide();
-                alert(isEdit ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!');
-            }
-        });
-        
-        // Novo: Evento de submissão do formulário de reagendamento
-        document.getElementById('rescheduleForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const reschedule = {};
-            for (let [key, value] of formData.entries()) {
-                reschedule[key] = value;
-            }
-            if (!validateRescheduleForm(reschedule)) return;
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const loginContainer = document.querySelector('.login-container');
+            const spinner = document.getElementById('loginSpinner');
+            const btn = this.querySelector('.btn-login');
+            const originalText = btn.innerHTML;
 
-            const clients = await getClients();
-            const client = clients.find(c => c.id === reschedule.rescheduleClientId);
-            if (!client) {
-                alert('Cliente não encontrado.');
-                return;
+            errorMessage.classList.remove('show');
+
+            spinner.style.display = 'inline-block';
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span>Entrando...';
+
+            // Verificação simples
+            if (username === 'Tayna' && password === '12124800') {
+                localStorage.setItem('authenticated', 'true');
+                loginContainer.classList.add('zoom-out');
+                setTimeout(() => window.location.href = 'login.html', 600);
+            } else {
+                errorMessage.classList.add('show');
+                showToast('Credenciais inválidas. Tente novamente.');
             }
 
-            // Atualiza apenas data e hora. O tipo de agendamento (application/maintenance) permanece o mesmo.
-            client.appointment_date = reschedule.reschedule_date;
-            client.appointment_time = reschedule.reschedule_time;
-            
-            const savedClient = await saveClients(client, true);
-            
-            if (savedClient) {
-                await updateAllData();
-                this.reset();
-                bootstrap.Modal.getInstance(document.getElementById('rescheduleModal')).hide();
-                alert(`Agendamento de ${client.name} reagendado para ${formatDate(client.appointment_date)} às ${formatTime(client.appointment_time)} com sucesso!`);
-            }
+            spinner.style.display = 'none';
+            btn.disabled = false;
+            btn.innerHTML = originalText;
         });
 
-
-        document.getElementById('newMaintenanceForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const maintenance = {};
-            for (let [key, value] of formData.entries()) {
-                maintenance[key] = value;
-            }
-            if (!validateMaintenanceForm(maintenance)) return;
-            const clients = await getClients();
-            const client = clients.find(c => c.id === maintenance.maintenanceId);
-            if (!client) {
-                alert('Cliente não encontrado.');
-                return;
-            }
-            client.appointment_type = 'maintenance';
-            client.appointment_date = maintenance.new_maintenance_date;
-            client.appointment_time = maintenance.new_maintenance_time;
-            client.maintenance_value = maintenance.new_maintenance_value;
-            client.eyelash_model = maintenance.new_eyelash_model;
-            const savedClient = await saveClients(client, true);
-            if (savedClient) {
-                await updateAllData();
-                this.reset();
-                bootstrap.Modal.getInstance(document.getElementById('newMaintenanceModal')).hide();
-                alert('Nova manutenção agendada com sucesso!');
-            }
-        });
-
-        document.getElementById('applicationMessageForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const template = document.getElementById('applicationMessageTemplate').value;
-            localStorage.setItem('applicationMessageTemplate', template);
-            alert('Modelo de mensagem de aplicação salvo com sucesso!');
-        });
-
-        document.getElementById('maintenanceMessageForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const template = document.getElementById('maintenanceMessageTemplate').value;
-            localStorage.setItem('maintenanceMessageTemplate', template);
-            alert('Modelo de mensagem de manutenção salvo com sucesso!');
-        });
-
-        document.getElementById('appointment_type').addEventListener('change', updateAppointmentLabels);
-
-        document.getElementById('prevMonth').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            updateCalendar();
-        });
-
-        document.getElementById('nextMonth').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            updateCalendar();
-        });
-
-        document.getElementById('searchInput').addEventListener('input', searchClients);
-
-        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-
-        // Event listeners para os botões de navegação de agendamentos
-        document.getElementById('prev-appointment-btn').addEventListener('click', () => {
-            if (currentAppointmentIndex > 0) {
-                updateNextAppointment(currentAppointmentIndex - 1);
-            }
-        });
-
-        document.getElementById('next-appointment-btn').addEventListener('click', () => {
-            if (currentAppointmentIndex < allFutureAppointments.length - 1) {
-                updateNextAppointment(currentAppointmentIndex + 1);
-            }
-        });
-
-        // Event listener para minimizar/maximizar a div de próximo agendamento
-        document.getElementById('next-appointment-card').addEventListener('click', (event) => {
-            // Garante que o clique não foi nos botões de navegação ou reagendar
-            if (!event.target.closest('.appointment-navigation-buttons') && !event.target.closest('#reschedule-button')) {
-                const card = document.getElementById('next-appointment-card');
-                card.classList.toggle('minimized');
-                localStorage.setItem('nextAppointmentCardMinimized', card.classList.contains('minimized'));
-            }
-        });
-
-        // Funções de inicialização
-        async function init() {
-            // Esconde o overlay de loading
-            document.getElementById('loading-overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('loading-overlay').style.display = 'none';
-            }, 500); // Tempo da transição CSS
-
-            // Aplica o tema salvo
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.getElementById('themeToggle').classList.remove('bi-sun-fill');
-                document.getElementById('themeToggle').classList.add('bi-moon-stars-fill');
-            }
-
-            // Carrega templates de mensagem
-            document.getElementById('applicationMessageTemplate').value = localStorage.getItem('applicationMessageTemplate') || defaultApplicationMessageTemplate;
-            document.getElementById('maintenanceMessageTemplate').value = localStorage.getItem('maintenanceMessageTemplate') || defaultMaintenanceMessageTemplate;
-
-            // Aplica estado minimizado salvo para o próximo agendamento
-            const isMinimized = localStorage.getItem('nextAppointmentCardMinimized') === 'true';
-            if (isMinimized) {
-                document.getElementById('next-appointment-card').classList.add('minimized');
-            }
-
-            await updateAllData();
-            updateDateTime();
-            setInterval(updateDateTime, 60000); // Atualiza a cada minuto
-            AOS.init();
-        }
-
-        async function updateAllData() {
-            await updateClientsTable();
-            await updateCalendar();
-            await updateAppointmentsList();
-            await updateNextAppointment(); 
-            await updateExpiredClientsList();
-        }
-
-        // Inicializa a aplicação quando o DOM estiver completamente carregado
-        document.addEventListener('DOMContentLoaded', init);
-
-        // Mobile section toggling
-        document.querySelectorAll('.section-icon').forEach(icon => {
-            icon.addEventListener('click', function() {
-                const targetSectionId = this.dataset.section;
-                toggleSection(targetSectionId);
+        // Animação de entrada suave nos campos
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
             });
         });
-
-        // Inicializa todas as seções como minimizadas no mobile por padrão, exceto a primeira
-        if (window.innerWidth <= 768) {
-            const sections = [ 'appointments-list', 'agenda', 'clients-list','expired-clients-list'];
-            sections.forEach((id, index) => {
-                const section = document.getElementById(id);
-                if (section) {
-                    if (index === 0) { // A primeira seção (Clientes Vencidos) começa expandida
-                        section.classList.add('expanded');
-                        section.classList.remove('minimized');
-                    } else {
-                        section.classList.add('minimized');
-                        section.classList.remove('expanded');
-                    }
-                }
-            });
-        }
-
     </script>
 </body>
 </html>

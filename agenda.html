@@ -166,24 +166,16 @@
             color: var(--primary-dark);
         }
         .calendar-day.has-event {
-            background: var(--secondary-light);
-            color: var(--text-light);
-            border: 2px solid var(--primary-light);
-            border-radius: 8px;
-            opacity: 0.9;
             cursor: pointer;
         }
         .dark-theme .calendar-day.has-event {
-            background: var(--secondary-dark);
-            border-color: var(--primary-dark);
-            color: var(--text-dark);
         }
         .calendar-day.has-event:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+            box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
         }
         .dark-theme .calendar-day.has-event:hover {
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.5);
+            box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
         }
         .calendar-day.today {
             background: var(--primary-light);
@@ -233,6 +225,15 @@
         }
         .dark-theme .day-events-list li:hover, .dark-theme .appointments-list li:hover {
             background: rgba(217, 119, 6, 0.1);
+        }
+        .highlight {
+            background: rgba(251, 191, 36, 0.2);
+            border-left: 4px solid var(--primary-light);
+            font-weight: 600;
+        }
+        .dark-theme .highlight {
+            background: rgba(217, 119, 6, 0.2);
+            border-left: 4px solid var(--primary-dark);
         }
         .badge-application {
             background: var(--secondary-light);
@@ -489,15 +490,24 @@ async function updateAppointmentsList() {
     const clients = await getClients();
     const listBody = document.getElementById('appointments-list-body');
     listBody.innerHTML = '';
+    const now = new Date();
     const sortedClients = clients.sort((a, b) => {
         const dateA = new Date(`${a.appointment_date}T${a.appointment_time}`);
         const dateB = new Date(`${b.appointment_date}T${b.appointment_time}`);
         return dateA - dateB;
     });
+    let highlighted = false;
     sortedClients.forEach((client, idx) => {
         const li = document.createElement('li');
         li.setAttribute('data-aos', 'fade-up');
         li.setAttribute('data-aos-delay', idx * 100);
+        const dt = new Date(`${client.appointment_date}T${client.appointment_time}:00`);
+        const isFuture = dt > now;
+        const isClosest = isFuture && !highlighted;
+        if (isClosest) {
+            highlighted = true;
+            li.classList.add('highlight');
+        }
         const badgeClass = client.appointment_type === 'application' ? 'badge-application' : 'badge-maintenance';
         const badgeText = client.appointment_type === 'application' ? 'Aplicação' : 'Manutenção';
         li.innerHTML = `
